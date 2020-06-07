@@ -46,11 +46,20 @@ public class ChessBoard : MonoBehaviour
     
     private void Update()
     {
-        
+        if(BaseGameCTL.Current.game_state == Egame_state.PLAYING)
+        {
+            CheckUserInput();
+        }
     }
 
     private void CheckUserInput()
     {
-
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 1000, 0101))
+        {
+            //Debug.Log(hit.collider.name);
+            hit.collider.GetComponent<cell>().SetCellState(Ecell_state.HOVER);
+        }
     }
 }

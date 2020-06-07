@@ -40,7 +40,7 @@ public class cell : MonoBehaviour
     public Ecell_state state
     {
         get { return State; }
-        set 
+        private set 
         {
             State = value;
             switch (State)
@@ -69,9 +69,9 @@ public class cell : MonoBehaviour
         state = Ecell_state.NORMAL;
     }
 
-    public void SetState()
+    public void SetCellState(Ecell_state cellState)
     {
-
+        state = cellState;
     }
 
     protected void OnMouseDown()

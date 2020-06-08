@@ -12,15 +12,17 @@ public class ChessBoard : MonoBehaviour
     }
 
     private cell[][] Cells;
+    private cell CurrentHoverCell = null;
     public GameObject cellPrefap;
     public Vector3 base_Position = Vector3.zero;
+    public LayerMask CellLayerMask = 0;
 
     public cell[][] cells { get { return Cells; } }
     public Vector3 Calculate_Position(int i, int j)
     {
         float size = cellPrefap.GetComponent<cell>().size;
         return base_Position + new Vector3(i * size, j * size,0);
-    }
+    }   
 
     public void Init_ChessBoard()
     {
@@ -56,10 +58,25 @@ public class ChessBoard : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1000, 0101))
+        if (Physics.Raycast(ray, out hit, 1000, CellLayerMask.value))
         {
             //Debug.Log(hit.collider.name);
-            hit.collider.GetComponent<cell>().SetCellState(Ecell_state.HOVER);
+            cell newcell = hit.collider.GetComponent<cell>(); ;
+            if (newcell != CurrentHoverCell)
+            {
+                if(CurrentHoverCell != null)
+                    CurrentHoverCell.SetCellState(Ecell_state.NORMAL);
+                CurrentHoverCell = newcell;
+                CurrentHoverCell.SetCellState(Ecell_state.HOVER);
+            }
+            else
+            {
+                if (CurrentHoverCell != null)
+                {
+                    CurrentHoverCell.SetCellState(Ecell_state.NORMAL);
+                    CurrentHoverCell = null;
+                }
+            }
         }
     }
 }

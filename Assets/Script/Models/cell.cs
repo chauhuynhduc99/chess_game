@@ -7,7 +7,7 @@ public class cell : MonoBehaviour
     private Transform  Cell_Hover;
     private Ecell_color Color;
     private Ecell_state State;
-
+    private BasePiece _currenPiece;
 
     public float size
     {

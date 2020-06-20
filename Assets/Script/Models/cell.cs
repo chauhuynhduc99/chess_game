@@ -31,6 +31,12 @@ public class cell : MonoBehaviour
                 case Ecell_color.WHITE:
                     GetComponent<Renderer>().material = resource_CTL.Instance.white_cell;
                     break;
+                case Ecell_color.HOVER_WHITE:
+                    GetComponent<Renderer>().material = resource_CTL.Instance.selected_cell_white;
+                    break;
+                case Ecell_color.HOVER_BLACK:
+                    GetComponent<Renderer>().material = resource_CTL.Instance.selected_cell_black;
+                    break;
                 default:
                     break;
             }
@@ -47,6 +53,10 @@ public class cell : MonoBehaviour
             {
                 case Ecell_state.NORMAL:
                     Cell_Hover.gameObject.SetActive(false);
+                    if (color == Ecell_color.HOVER_WHITE)
+                        color = Ecell_color.WHITE;
+                    if (color == Ecell_color.HOVER_BLACK)
+                        color = Ecell_color.BLACK;
                     break;
                 case Ecell_state.HOVER:
                     Cell_Hover.gameObject.SetActive(true);
@@ -55,7 +65,10 @@ public class cell : MonoBehaviour
 
                     break;
                 case Ecell_state.SELECTED:
-                    Cell_Hover.gameObject.SetActive(true);
+                    if(color == Ecell_color.WHITE)
+                        color = Ecell_color.HOVER_WHITE;
+                    if (color == Ecell_color.BLACK)
+                        color = Ecell_color.HOVER_BLACK;
                     break;
                 default:
                     break;
@@ -63,22 +76,32 @@ public class cell : MonoBehaviour
         }
     }
 
-    protected void Start()
+    protected void Awake()
     {
         Cell_Hover = this.transform.GetChild(0);
+    }
+    protected void Start()
+    {
         state = Ecell_state.NORMAL;
     }
+
+    protected void OnMouseDown()
+    {
+            state = Ecell_state.SELECTED;
+    }
+    protected void OnMouseUp()
+    {
+        state = Ecell_state.NORMAL;
+    }
+
 
     public void SetCellState(Ecell_state cellState)
     {
         state = cellState;
     }
 
-    protected void OnMouseDown()
+    private void SetPieces(BasePiece piece)
     {
-        Debug.Log("Down");
-        if (state != Ecell_state.SELECTED)
-            state = Ecell_state.SELECTED;
+        this._currenPiece = piece;
     }
-
 }

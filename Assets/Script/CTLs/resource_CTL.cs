@@ -18,6 +18,9 @@ public class resource_CTL
     #region Property
     private Material Black_cell;
     private Material White_cell;
+    private Material Selected_cell_white;
+    private Material Selected_cell_black;
+
     public Material black_cell
     {
         get
@@ -42,8 +45,32 @@ public class resource_CTL
         }
 
     }
+    public Material selected_cell_white
+    {
+        get
+        {
+            if (Selected_cell_white == null)
+            {
+                    Selected_cell_white = Resources.Load<Material>("Material/hover_white");
+            }
+            return Selected_cell_white;
+        }
+    }
+    public Material selected_cell_black
+    {
+        get
+        {
+            if (Selected_cell_black == null)
+            {
+                Selected_cell_black = Resources.Load<Material>("Material/hover_black");
+            }
+            return Selected_cell_black;
+        }
+
+    }
+
     #endregion
 
     private resource_CTL() { }
-    
+
 }

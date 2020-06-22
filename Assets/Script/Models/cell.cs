@@ -8,6 +8,7 @@ public class cell : MonoBehaviour
     private Ecell_color Color;
     private Ecell_state State;
     private BasePiece _currenPiece;
+    public static bool Is_mouse_down = false;
 
     public float size
     {
@@ -87,6 +88,7 @@ public class cell : MonoBehaviour
 
     protected void OnMouseDown()
     {
+        if (Is_mouse_down == true)
             state = Ecell_state.SELECTED;
     }
     protected void OnMouseUp()
@@ -94,6 +96,7 @@ public class cell : MonoBehaviour
         state = Ecell_state.NORMAL;
     }
 
+    
 
     public void SetCellState(Ecell_state cellState)
     {

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public abstract class BasePiece : MonoBehaviour
 {
     private bool mouse_down;
-    public static bool is_mouse_down;
+    private Vector2 originalLocation;
     //khởi tạo mousePos
     public Vector3 mousePos;
     public float minX = 0f;
@@ -17,7 +17,7 @@ public abstract class BasePiece : MonoBehaviour
     private Vector3 offsetPosition;
     [SerializeField]
     protected Eplayer _player;
-    private Vector2 originalLocation;
+    
 
     public Eplayer Player { get { return _player; } protected set { _player = value; } }
     public Vector2 Location { get; private set; }
@@ -32,12 +32,21 @@ public abstract class BasePiece : MonoBehaviour
     {
         mousePos = transform.position;
     }
-    void OnMouseDown()
+
+    private void OnMouseEnter()
+    {
+        cell.Is_mouse_down = true;
+    }
+    private void OnMouseExit()
+    {
+        cell.Is_mouse_down = false;
+    }
+    protected void OnMouseDown()
     {
         //hàm thực hiện khi nhấp chuột vào quân cờ được gán
         mouse_down = true;
     }
-    public void OnMouseUp()
+    protected void OnMouseUp()
     {
         //hàm thực hiện khi nhả chuột ra quân cờ được gán
         mouse_down = false;
@@ -50,17 +59,13 @@ public abstract class BasePiece : MonoBehaviour
     {
         if (Input.GetMouseButton(0) && mouse_down == true)
         {
-            is_mouse_down = mouse_down;
             //cập nhật vị trí trỏ chuột vào mousePos
             mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos = new Vector3(Mathf.Clamp(mousePos.x, minX, maxX), Mathf.Clamp(mousePos.y, minY, maxY), -1);
         }
         //di chuyển quân cờ tới vị trí mousePos với tốc độ 5000 (gần như ngay lập tức)
         transform.position = Vector3.Lerp(transform.position, mousePos, 5000 * Time.deltaTime);
-
-        is_mouse_down = mouse_down;
     }
-
 
     public abstract void Move();
 }

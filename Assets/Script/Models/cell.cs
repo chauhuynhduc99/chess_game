@@ -17,6 +17,7 @@ public class cell : MonoBehaviour
             return GetComponent<Renderer>().bounds.size.x;
         }
     }
+    public BasePiece CurrentPiece { get { return _currenPiece; } }
 
     public Ecell_color color
     {
@@ -38,6 +39,12 @@ public class cell : MonoBehaviour
                 case Ecell_color.HOVER_BLACK:
                     GetComponent<Renderer>().material = resource_CTL.Instance.selected_cell_black;
                     break;
+                case Ecell_color.TARGETED_BLACK:
+                    GetComponent<Renderer>().material = resource_CTL.Instance.targeted_cell_black;
+                    break;
+                case Ecell_color.TARGETED_WHITE:
+                    GetComponent<Renderer>().material = resource_CTL.Instance.targeted_cell_white;
+                    break;
                 default:
                     break;
             }
@@ -54,17 +61,23 @@ public class cell : MonoBehaviour
             {
                 case Ecell_state.NORMAL:
                     Cell_Hover.gameObject.SetActive(false);
-                    if (color == Ecell_color.HOVER_WHITE)
+                    if (color == Ecell_color.HOVER_WHITE || color == Ecell_color.TARGETED_WHITE)
                         color = Ecell_color.WHITE;
-                    if (color == Ecell_color.HOVER_BLACK)
+                    if (color == Ecell_color.HOVER_BLACK || color == Ecell_color.TARGETED_BLACK)
                         color = Ecell_color.BLACK;
                     break;
+
                 case Ecell_state.HOVER:
                     Cell_Hover.gameObject.SetActive(true);
                     break;
-                case Ecell_state.TARGETED:
 
+                case Ecell_state.TARGETED:
+                    if (color == Ecell_color.WHITE)
+                        color = Ecell_color.TARGETED_WHITE;
+                    if (color == Ecell_color.BLACK)
+                        color = Ecell_color.TARGETED_BLACK;
                     break;
+
                 case Ecell_state.SELECTED:
                     if(color == Ecell_color.WHITE)
                         color = Ecell_color.HOVER_WHITE;
@@ -85,7 +98,6 @@ public class cell : MonoBehaviour
     {
         state = Ecell_state.NORMAL;
     }
-
     protected void OnMouseDown()
     {
         if (Is_mouse_down == true)
@@ -96,14 +108,14 @@ public class cell : MonoBehaviour
         state = Ecell_state.NORMAL;
     }
 
-    
+
 
     public void SetCellState(Ecell_state cellState)
     {
         state = cellState;
     }
 
-    private void SetPieces(BasePiece piece)
+    public void SetPieces(BasePiece piece)
     {
         this._currenPiece = piece;
     }

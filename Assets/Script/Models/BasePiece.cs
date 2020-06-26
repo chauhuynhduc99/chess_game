@@ -4,8 +4,11 @@ using System.Collections.Generic;
 
 public abstract class BasePiece : MonoBehaviour
 {
+    protected List<cell> _target = new List<cell>();
+    protected List<cell> _canMovecells = new List<cell>();
+    protected cell _currentCell;
     private bool mouse_down;
-    private Vector2 originalLocation;
+    protected Vector2 originalLocation;
     //khởi tạo mousePos
     public Vector3 mousePos;
     public float minX = 0f;
@@ -14,25 +17,28 @@ public abstract class BasePiece : MonoBehaviour
     public float maxY = 7f;
 
     [SerializeField]
-    private Vector3 offsetPosition;
+    protected Vector3 offsetPosition;
     [SerializeField]
     protected Eplayer _player;
-    
+
 
     public Eplayer Player { get { return _player; } protected set { _player = value; } }
     public Vector2 Location { get; private set; }
+    public cell CurrentCell { get { return _currentCell; } set { _currentCell = value; } }
 
     public void SetOriginalLocation(int x, int y)
     {
         originalLocation = new Vector2(x, y);
         this.transform.position = offsetPosition + new Vector3(x * ChessBoard.Current.CELL_SIZE, y * ChessBoard.Current.CELL_SIZE, -1);
+        this.Location = this.transform.position;
+        _currentCell = ChessBoard.Current.cells[x][y];
+        _currentCell.SetPieces(this);
     }
 
-    void Start()
+    private void Start()
     {
         mousePos = transform.position;
     }
-
     private void OnMouseEnter()
     {
         cell.Is_mouse_down = true;
@@ -43,8 +49,9 @@ public abstract class BasePiece : MonoBehaviour
     }
     protected void OnMouseDown()
     {
-        //hàm thực hiện khi nhấp chuột vào quân cờ được gán
+        this.Location = _currentCell.transform.position;
         mouse_down = true;
+        Move();
     }
     protected void OnMouseUp()
     {
@@ -53,6 +60,35 @@ public abstract class BasePiece : MonoBehaviour
         //làm tròn tọa độ cho khớp vô ô cờ
         mousePos.x = Mathf.Round(transform.position.x);
         mousePos.y = Mathf.Round(transform.position.y);
+        cell old_cell = this._currentCell;
+        foreach (cell item in _canMovecells)
+        {
+            if (ChessBoard.Current.cells[(int)mousePos.x][(int)mousePos.y] == item)
+            {
+                this._currentCell = item;
+                this._currentCell.SetPieces(this);
+                old_cell.SetPieces(null);
+                this.Location = mousePos;
+                break;
+            }
+        }
+        foreach (cell item in _target)
+        {
+            if (ChessBoard.Current.cells[(int)mousePos.x][(int)mousePos.y] == item)
+            {
+                item.CurrentPiece.gameObject.SetActive(false);
+                this._currentCell = item;
+                this._currentCell.SetPieces(this);
+                old_cell.SetPieces(null);
+                this.Location = mousePos;
+                break;
+            }
+        }
+
+        mousePos = this.Location;
+        mousePos.z = -1;
+        EndMove();
+
     }
     // Update is called once per frame
     void Update()
@@ -68,4 +104,10 @@ public abstract class BasePiece : MonoBehaviour
     }
 
     public abstract void Move();
+    private void EndMove()
+    {
+        _canMovecells = new List<cell>();
+        _target = new List<cell>();
+        BaseGameCTL.Current.SwitchTurn();
+    }
 }

@@ -14,7 +14,7 @@ public class ChessBoard : MonoBehaviour
     public Vector3 base_Position = Vector3.zero;
     public LayerMask CellLayerMask = 0;
 
-    public cell[][] cells { get { return Cells; } }
+    public cell[][] cells { get { return Cells; } set { Cells = value; } }
     public float CELL_SIZE
     {
         get
@@ -118,7 +118,7 @@ public class ChessBoard : MonoBehaviour
     }
     private void Update()
     {
-        
+        Current = this;
     }
 
 }

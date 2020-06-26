@@ -4,5 +4,5 @@ using UnityEngine;
 
 public enum Ecell_color
 {
-    BLACK, WHITE, HOVER_WHITE, HOVER_BLACK
+    BLACK, WHITE, HOVER_WHITE, HOVER_BLACK, TARGETED_BLACK, TARGETED_WHITE
 }

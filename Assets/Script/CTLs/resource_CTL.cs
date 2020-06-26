@@ -20,6 +20,9 @@ public class resource_CTL
     private Material White_cell;
     private Material Selected_cell_white;
     private Material Selected_cell_black;
+    private Material Targeted_cell_black;
+    private Material Targeted_cell_white;
+
 
     public Material black_cell
     {
@@ -43,7 +46,6 @@ public class resource_CTL
             }
             return White_cell;
         }
-
     }
     public Material selected_cell_white
     {
@@ -67,6 +69,28 @@ public class resource_CTL
             return Selected_cell_black;
         }
 
+    }
+    public Material targeted_cell_black
+    {
+        get
+        {
+            if (Targeted_cell_black == null)
+            {
+                Targeted_cell_black = Resources.Load<Material>("Material/Targeted_black");
+            }
+            return Targeted_cell_black;
+        }
+    }
+    public Material targeted_cell_white
+    {
+        get
+        {
+            if (Targeted_cell_white == null)
+            {
+                Targeted_cell_white = Resources.Load<Material>("Material/Targeted_white");
+            }
+            return Targeted_cell_white;
+        }
     }
 
     #endregion

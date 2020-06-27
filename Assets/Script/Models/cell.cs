@@ -7,8 +7,7 @@ public class cell : MonoBehaviour
     private Transform  Cell_Hover;
     private Ecell_color Color;
     private Ecell_state State;
-    private BasePiece _currenPiece;
-    public static bool Is_mouse_down = false;
+    private BasePiece _currentPiece;
 
     public float size
     {
@@ -17,7 +16,7 @@ public class cell : MonoBehaviour
             return GetComponent<Renderer>().bounds.size.x;
         }
     }
-    public BasePiece CurrentPiece { get { return _currenPiece; } }
+    public BasePiece CurrentPiece { get { return _currentPiece; } }
 
     public Ecell_color color
     {
@@ -100,7 +99,7 @@ public class cell : MonoBehaviour
     }
     protected void OnMouseDown()
     {
-        if (Is_mouse_down == true)
+        if (_currentPiece != null)
             state = Ecell_state.SELECTED;
     }
     protected void OnMouseUp()
@@ -117,6 +116,6 @@ public class cell : MonoBehaviour
 
     public void SetPieces(BasePiece piece)
     {
-        this._currenPiece = piece;
+        this._currentPiece = piece;
     }
 }

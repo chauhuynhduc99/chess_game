@@ -4,12 +4,14 @@ using System.Collections.Generic;
 
 public abstract class BasePiece : MonoBehaviour
 {
+    //Lưu các ô có thể di chuyển tới và ô có quân của địch
     protected List<cell> _target = new List<cell>();
     protected List<cell> _canMovecells = new List<cell>();
+
     protected cell _currentCell;
     private bool mouse_down;
     protected Vector2 originalLocation;
-    //khởi tạo mousePos
+
     public Vector3 mousePos;
     public float minX = 0f;
     public float maxX = 7f;
@@ -21,46 +23,47 @@ public abstract class BasePiece : MonoBehaviour
     [SerializeField]
     protected Eplayer _player;
 
-
     public Eplayer Player { get { return _player; } protected set { _player = value; } }
-    public Vector2 Location { get; private set; }
+    public Vector2 Location { get;protected set; }
     public cell CurrentCell { get { return _currentCell; } set { _currentCell = value; } }
 
-    public void SetOriginalLocation(int x, int y)
+    public void SetOriginalLocation(int x, int y)//Khởi tạo vị trí ban đầu
     {
         originalLocation = new Vector2(x, y);
-        this.transform.position = offsetPosition + new Vector3(x * ChessBoard.Current.CELL_SIZE, y * ChessBoard.Current.CELL_SIZE, -1);
+        transform.position = new Vector3(x * ChessBoard.Current.CELL_SIZE, y * ChessBoard.Current.CELL_SIZE,-1);
         this.Location = this.transform.position;
+        //Gán ô cờ ở vị trí tương ứng cho _currentCell
         _currentCell = ChessBoard.Current.cells[x][y];
+        //Gán quân cờ này cho biến Current_Piece của ô cờ vừa gán vào
         _currentCell.SetPieces(this);
+        Debug.Log(Location);
     }
 
     private void Start()
     {
+        //Khởi tạo mouse_pos với vị trí ban đàu của quân cờ
         mousePos = transform.position;
-    }
-    private void OnMouseEnter()
-    {
-        cell.Is_mouse_down = true;
-    }
-    private void OnMouseExit()
-    {
-        cell.Is_mouse_down = false;
     }
     protected void OnMouseDown()
     {
+        //Lưu vị trí của quân cờ vào Location
         this.Location = _currentCell.transform.position;
         mouse_down = true;
+
         Move();
     }
     protected void OnMouseUp()
     {
-        //hàm thực hiện khi nhả chuột ra quân cờ được gán
         mouse_down = false;
         //làm tròn tọa độ cho khớp vô ô cờ
         mousePos.x = Mathf.Round(transform.position.x);
         mousePos.y = Mathf.Round(transform.position.y);
+
+        //Lưu lại biến ô cờ sắp bị thay đổi
         cell old_cell = this._currentCell;
+
+        //Nếu vị trí thả chuột nằm trong list ô có thể đi thì thực hiện thay đổi vị trí cũng như gán cho biến _curentCell ô cờ mới
+        //Đồng thời gán quân cờ này cho biến current_Piece của ô cờ mới và gán null cho ô cờ cũ
         foreach (cell item in _canMovecells)
         {
             if (ChessBoard.Current.cells[(int)mousePos.x][(int)mousePos.y] == item)
@@ -72,6 +75,9 @@ public abstract class BasePiece : MonoBehaviour
                 break;
             }
         }
+
+        //Vị trí thả chuột nằm trong list ô có quân địch thì destroy quân địch và thực hiện thay đổi vị trí cũng như gán cho biến _curentCell ô cờ mới
+        //Đồng thời gán quân cờ này cho biến current_Piece của ô cờ mới và gán null cho ô cờ cũ
         foreach (cell item in _target)
         {
             if (ChessBoard.Current.cells[(int)mousePos.x][(int)mousePos.y] == item)
@@ -85,12 +91,14 @@ public abstract class BasePiece : MonoBehaviour
             }
         }
 
+        //Nếu các trường hợp trên không xảy ra thì Location sẽ có giá trị ban đầu
+        //Ta gán giá trị ban đầu cho mousePos để quân cờ trở về vị trí cũ vì đi sai luật
         mousePos = this.Location;
         mousePos.z = -1;
+
         EndMove();
 
     }
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButton(0) && mouse_down == true)
@@ -106,8 +114,10 @@ public abstract class BasePiece : MonoBehaviour
     public abstract void Move();
     private void EndMove()
     {
+        //Reset lại list sau khi di chuyển quân cờ
         _canMovecells = new List<cell>();
         _target = new List<cell>();
+        //Thực hiện đổi lượt chơi
         BaseGameCTL.Current.SwitchTurn();
     }
 }

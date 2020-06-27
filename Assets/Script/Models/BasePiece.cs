@@ -76,7 +76,7 @@ public abstract class BasePiece : MonoBehaviour
         {
             if (ChessBoard.Current.cells[(int)mousePos.x][(int)mousePos.y] == item)
             {
-                item.CurrentPiece.gameObject.SetActive(false);
+                Destroy(item.CurrentPiece.gameObject);
                 this._currentCell = item;
                 this._currentCell.SetPieces(this);
                 old_cell.SetPieces(null);

@@ -10,8 +10,6 @@ public class BaseGameCTL : MonoBehaviour
 
     public static BaseGameCTL Current;
 
-    public const float TIME_TO_THINK = 20;
-
     private Egame_state _gameState;
     public Eplayer CurrentPlayer { get; private set; }
 

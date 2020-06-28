@@ -8,8 +8,9 @@ public class Pawn : BasePiece
     public override void Move()
     {
         List<Clocation> list = new List<Clocation>();
-
         Clocation c;
+
+        #region Pawn Location
         if (this.Player == Eplayer.WHITE)
         {
             //0 +1
@@ -50,14 +51,14 @@ public class Pawn : BasePiece
             if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
                 list.Add(c);
         }
-        
+        #endregion
 
         foreach (var item in list)
         {
             cell Cell = ChessBoard.Current.cells[item.X][item.Y];
             if (Cell.CurrentPiece == null)
             {
-                if (Location == this.originalLocation && item.X == Location.x)
+                if (Is_it_moved == false && item.X == Location.x)
                     _canMovecells.Add(Cell);
                 else if(item.X == Location.x && ((item.Y - Location.y) == 1 || (item.Y - Location.y) == -1))
                     _canMovecells.Add(Cell);

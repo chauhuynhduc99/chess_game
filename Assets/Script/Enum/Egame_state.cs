@@ -4,5 +4,5 @@ using UnityEngine;
 
 public enum Egame_state
 {
-    GAMEOVER,PLAYING,WIN
+    PLAYING,END_GAME
 }

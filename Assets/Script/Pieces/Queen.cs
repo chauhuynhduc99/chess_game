@@ -9,6 +9,8 @@ public class Queen : BasePiece
     {
         List<Clocation> list = new List<Clocation>();
         Clocation c;
+
+        #region Qeen Location
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x, (int)Location.y + i);
@@ -121,6 +123,7 @@ public class Queen : BasePiece
                 }
             }
         }
+        #endregion
 
         foreach (var item in list)
         {

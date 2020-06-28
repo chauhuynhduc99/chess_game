@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class ChessBoard : MonoBehaviour
 {
+    #region Field
     private cell[][] Cells;
     private cell CurrentHoverCell = null;
     private float Cell_size = -1;
@@ -13,6 +14,7 @@ public class ChessBoard : MonoBehaviour
     public GameObject cellPrefap;
     public Vector3 base_Position = Vector3.zero;
     public LayerMask CellLayerMask = 0;
+    #endregion
 
     public cell[][] cells { get { return Cells; } set { Cells = value; } }
     public float CELL_SIZE
@@ -30,9 +32,7 @@ public class ChessBoard : MonoBehaviour
         float size = cellPrefap.GetComponent<cell>().size;
         return base_Position + new Vector3(i * size, j * size,0);
     }
-
-    [ContextMenu("Init_ChessBoard")]
-    public void Init_ChessBoard()
+    private void Init_ChessBoard()
     {
         Cells = new cell[8][];
         for(int i = 0; i < 8; i++)
@@ -53,9 +53,7 @@ public class ChessBoard : MonoBehaviour
             }
         }
     }
-
-    [ContextMenu("Init_ChessPieces")]
-    public void Init_ChessPieces()
+    private void Init_ChessPieces()
     {
         pieces = new List<BasePiece>();
         List<PieceInfo> List = new List<PieceInfo>();
@@ -107,16 +105,13 @@ public class ChessBoard : MonoBehaviour
             chess_piece.transform.parent = this.transform;
         }
     }
-    private void Awake()
-    {
-        Current = this;
-    }
+
     private void Start()
     {
         Init_ChessBoard();
         Init_ChessPieces();
     }
-    private void Update()
+    private void Awake()
     {
         Current = this;
     }

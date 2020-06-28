@@ -9,6 +9,8 @@ public class Bishop : BasePiece
     {
         List<Clocation> list = new List<Clocation>();
         Clocation c;
+
+        #region Bishop Location
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x + i, (int)Location.y + i);
@@ -65,6 +67,7 @@ public class Bishop : BasePiece
                 }
             }
         }
+        #endregion
 
         foreach (var item in list)
         {

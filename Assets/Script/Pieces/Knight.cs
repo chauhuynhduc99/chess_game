@@ -9,6 +9,8 @@ public class Knight : BasePiece
     {
         List<Clocation> list = new List<Clocation>();
         Clocation c;
+
+        #region Knight Location
         //+1 +2
         c = new Clocation((int)Location.x + 1, (int)Location.y + 2);
         if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
@@ -42,8 +44,7 @@ public class Knight : BasePiece
         c = new Clocation((int)Location.x - 1, (int)Location.y + 2);
         if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
             list.Add(c);
-
-
+        #endregion
 
         foreach (var item in list)
         {

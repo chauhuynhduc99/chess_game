@@ -9,6 +9,8 @@ public class Castle : BasePiece
     {
         List<Clocation> list = new List<Clocation>();
         Clocation c;
+
+        #region Castle Location
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x, (int)Location.y + i);
@@ -65,6 +67,7 @@ public class Castle : BasePiece
                 }
             }
         }
+        #endregion
 
         foreach (var item in list)
         {
@@ -79,5 +82,38 @@ public class Castle : BasePiece
             item.SetCellState(Ecell_state.HOVER);
         foreach (var item in _target)
             item.SetCellState(Ecell_state.TARGETED);
+    }
+    public void Castling(Eplayer player, bool is_left)
+    {
+        if(player == Eplayer.BLACK )
+        {
+            if (is_left == true)
+            {
+                _currentCell = ChessBoard.Current.cells[3][7];
+                mousePos = _currentCell.transform.position;
+                mousePos.z = -1;
+            }
+            else
+            {
+                _currentCell = ChessBoard.Current.cells[5][7];
+                mousePos = _currentCell.transform.position;
+                mousePos.z = -1;
+            }
+        }
+        else
+        {
+            if (is_left == true)
+            {
+                _currentCell = ChessBoard.Current.cells[3][0];
+                mousePos = _currentCell.transform.position;
+                mousePos.z = -1;
+            }
+            else
+            {
+                _currentCell = ChessBoard.Current.cells[5][0];
+                mousePos = _currentCell.transform.position;
+                mousePos.z = -1;
+            }
+        }
     }
 }

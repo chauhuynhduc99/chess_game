@@ -4,20 +4,13 @@ using UnityEngine;
 
 public class cell : MonoBehaviour
 {
-    private Transform  Cell_Hover;
     private Ecell_color Color;
     private Ecell_state State;
     private BasePiece _currentPiece;
+    private Transform  Cell_Hover;
 
-    public float size
-    {
-        get
-        {
-            return GetComponent<Renderer>().bounds.size.x;
-        }
-    }
+    public float size { get { return GetComponent<Renderer>().bounds.size.x; } }
     public BasePiece CurrentPiece { get { return _currentPiece; } }
-
     public Ecell_color color
     {
         get { return Color; }
@@ -49,7 +42,6 @@ public class cell : MonoBehaviour
             }
         }
     }
-
     public Ecell_state state
     {
         get { return State; }
@@ -89,33 +81,34 @@ public class cell : MonoBehaviour
         }
     }
 
-    protected void Awake()
-    {
-        Cell_Hover = this.transform.GetChild(0);
-    }
-    protected void Start()
-    {
-        state = Ecell_state.NORMAL;
-    }
-    protected void OnMouseDown()
-    {
-        if (_currentPiece != null)
-            state = Ecell_state.SELECTED;
-    }
-    protected void OnMouseUp()
-    {
-        state = Ecell_state.NORMAL;
-    }
-
-
-
     public void SetCellState(Ecell_state cellState)
     {
         state = cellState;
     }
-
     public void SetPieces(BasePiece piece)
     {
         this._currentPiece = piece;
+    }
+
+    protected void Start()
+    {
+        state = Ecell_state.NORMAL;
+    }
+    protected void Awake()
+    {
+        Cell_Hover = this.transform.GetChild(0);
+    }
+    protected void OnMouseDown()
+    {
+        if (_currentPiece != null 
+            && BaseGameCTL.Current.GameState == Egame_state.PLAYING 
+            && BaseGameCTL.Current.CurrentPlayer == _currentPiece.Player)
+        {
+            state = Ecell_state.SELECTED;
+        }
+    }
+    protected void OnMouseUp()
+    {
+        state = Ecell_state.NORMAL;
     }
 }

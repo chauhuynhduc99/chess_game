@@ -5,6 +5,13 @@ using UnityEngine;
 public class resource_CTL
 {
     private static resource_CTL _instance = null;
+    private Material Black_cell;
+    private Material White_cell;
+    private Material Selected_cell_white;
+    private Material Selected_cell_black;
+    private Material Targeted_cell_black;
+    private Material Targeted_cell_white;
+
     public static resource_CTL Instance
     {
         get
@@ -14,16 +21,6 @@ public class resource_CTL
             return _instance;
         }
     }
-
-    #region Property
-    private Material Black_cell;
-    private Material White_cell;
-    private Material Selected_cell_white;
-    private Material Selected_cell_black;
-    private Material Targeted_cell_black;
-    private Material Targeted_cell_white;
-
-
     public Material black_cell
     {
         get
@@ -93,8 +90,5 @@ public class resource_CTL
         }
     }
 
-    #endregion
-
     private resource_CTL() { }
-
 }

@@ -8,10 +8,14 @@ namespace Assets.Script.Models
 {
     public class Clocation
     {
-        public Clocation(int x, int y)
-        { X = x; Y = y; }
         public int X;
         public int Y;
+
+        public Clocation(int x, int y)
+        {
+            X = x;
+            Y = y; 
+        }
 
         public override string ToString()
         {

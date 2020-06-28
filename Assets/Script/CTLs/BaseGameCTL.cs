@@ -6,65 +6,38 @@ using UnityEngine.UI;
 
 public class BaseGameCTL : MonoBehaviour
 {
-
-
+    
+    private Egame_state _gameState;
     public static BaseGameCTL Current;
 
-    private Egame_state _gameState;
     public Eplayer CurrentPlayer { get; private set; }
+    public Egame_state GameState { get { return _gameState; } set { _gameState = value; } }
 
-    public Egame_state GameState
+    public void SwitchTurn()
     {
-        get { return _gameState; }
-        set { _gameState = value; }
+        if (CurrentPlayer == Eplayer.WHITE)
+            CurrentPlayer = Eplayer.BLACK;
+        else
+            CurrentPlayer = Eplayer.WHITE;
+    }
+    public Egame_state CheckGameState()
+    {
+        return Egame_state.PLAYING;
+    }
+    public void end_game(Eplayer winPlayer)
+    {
+        GameState = Egame_state.END_GAME;
+        Debug.Log("WinPlayer : " + winPlayer);
     }
 
-
-    void Awake()
+    private void Awake()
     {
         Current = this;
         CurrentPlayer = Eplayer.WHITE;
         GameState = Egame_state.PLAYING;
     }
-
-    void Start()
+    private void Update()
     {
-        // StartCoroutine(UpdateTime());
+        Current = this;
     }
-
-    /// <summary>
-    /// Chuyển lượt chơi
-    /// </summary>
-    public void SwitchTurn()
-    {
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                if (ChessBoard.Current.cells[i][j].state != Ecell_state.NORMAL)
-                    ChessBoard.Current.cells[i][j].SetCellState(Ecell_state.NORMAL);
-            }
-        }
-        if (CurrentPlayer == Eplayer.WHITE)
-            CurrentPlayer = Eplayer.BLACK;
-        else
-            CurrentPlayer = Eplayer.WHITE;
-        Debug.Log("switch");
-    }
-
-    /// <summary>
-    /// Kiểm tra trạng thái của bàn cờ, xem đã kết thúc hay chưa
-    /// </summary>
-    public Egame_state CheckGameState()
-    {
-
-        return Egame_state.PLAYING;
-    }
-
-    public void GameOver(Eplayer winPlayer)
-    {
-        GameState = Egame_state.GAMEOVER;
-        Debug.Log("WinPlayer : " + winPlayer);
-    }
-
 }

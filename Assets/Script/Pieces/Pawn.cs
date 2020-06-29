@@ -1,7 +1,9 @@
 ﻿using Assets.Script.Models;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.Experimental.UIElements;
 
 public class Pawn : BasePiece
 {
@@ -71,5 +73,14 @@ public class Pawn : BasePiece
             item.SetCellState(Ecell_state.HOVER);
         foreach (var item in _target)
             item.SetCellState(Ecell_state.TARGETED);
+    }
+    protected override void OnMouseUp()
+    {
+        base.OnMouseUp();
+        if((Location.y == 7 && Player == Eplayer.WHITE)|| (Location.y == 0 && Player == Eplayer.BLACK))
+        {
+            pro_P.Current.Promotion(this);
+            Destroy(gameObject);
+        }
     }
 }

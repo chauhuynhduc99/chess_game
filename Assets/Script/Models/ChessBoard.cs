@@ -55,7 +55,6 @@ public class ChessBoard : MonoBehaviour
     }
     private void Init_ChessPieces()
     {
-        pieces = new List<BasePiece>();
         List<PieceInfo> List = new List<PieceInfo>();
 
         //white
@@ -101,7 +100,6 @@ public class ChessBoard : MonoBehaviour
             GameObject chess_piece = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>(item.Path));
             BasePiece p = chess_piece.GetComponent<BasePiece>();
             p.SetOriginalLocation(item.X, item.Y);
-            pieces.Add(p);
             chess_piece.transform.parent = this.transform;
         }
     }

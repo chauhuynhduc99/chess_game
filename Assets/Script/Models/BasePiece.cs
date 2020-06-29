@@ -52,7 +52,7 @@ public abstract class BasePiece : MonoBehaviour
     }
     
 
-    protected virtual void Start()
+    protected void Start()
     {
         mousePos = transform.position;//Khởi tạo mouse_pos với vị trí ban đàu của quân cờ
     }
@@ -138,5 +138,4 @@ public abstract class BasePiece : MonoBehaviour
         //di chuyển quân cờ tới vị trí mousePos với tốc độ 5000 (gần như ngay lập tức)
         transform.position = Vector3.Lerp(transform.position, mousePos, 5000000 * Time.deltaTime);
     }
-
 }

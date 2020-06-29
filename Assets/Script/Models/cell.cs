@@ -98,17 +98,4 @@ public class cell : MonoBehaviour
     {
         Cell_Hover = this.transform.GetChild(0);
     }
-    protected void OnMouseDown()
-    {
-        if (_currentPiece != null 
-            && BaseGameCTL.Current.GameState == Egame_state.PLAYING 
-            && BaseGameCTL.Current.CurrentPlayer == _currentPiece.Player)
-        {
-            state = Ecell_state.SELECTED;
-        }
-    }
-    protected void OnMouseUp()
-    {
-        state = Ecell_state.NORMAL;
-    }
 }

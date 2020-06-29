@@ -7,7 +7,9 @@ public class quad : MonoBehaviour
 {
     private void OnMouseUp()
     {
-        if(pro_P.Current.done == true)
+        if (pro_P.Current.done == true)
+        {
             Destroy(this.gameObject);
+        }
     }
 }

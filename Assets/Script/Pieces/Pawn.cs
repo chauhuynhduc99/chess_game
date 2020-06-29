@@ -79,7 +79,6 @@ public class Pawn : BasePiece
         if((Location.y == 7 && Player == Eplayer.WHITE)|| (Location.y == 0 && Player == Eplayer.BLACK))
         {
             pro_P.Current.Promotion(this);
-            Destroy(gameObject);
         }
     }
 }

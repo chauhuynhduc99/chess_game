@@ -42,10 +42,13 @@ public abstract class BasePiece : MonoBehaviour
     public abstract void Move();
     private void EndMove()
     {
-        foreach (cell item in _canMovecells)
-            item.SetCellState(Ecell_state.NORMAL);
-        foreach (cell item in _target)
-            item.SetCellState(Ecell_state.NORMAL);
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                ChessBoard.Current.cells[i][j].SetCellState(Ecell_state.NORMAL);
+            }
+        }
         //Reset lại list sau khi di chuyển quân cờ
         _canMovecells = new List<cell>();
         _target = new List<cell>();
@@ -66,6 +69,7 @@ public abstract class BasePiece : MonoBehaviour
         //Lưu vị trí của quân cờ vào Location
         this.Location = _currentCell.transform.position;
         mouse_down = true;
+        _currentCell.SetCellState(Ecell_state.SELECTED);
 
         Move();
     }

@@ -14,7 +14,7 @@ public class Castle : BasePiece
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x, (int)Location.y + i);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
             {
                 if (ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
                     list.Add(c);
@@ -28,7 +28,7 @@ public class Castle : BasePiece
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x + i, (int)Location.y);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
             {
                 if (ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
                     list.Add(c);
@@ -42,7 +42,7 @@ public class Castle : BasePiece
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x - i, (int)Location.y);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
             {
                 if (ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
                     list.Add(c);
@@ -56,7 +56,7 @@ public class Castle : BasePiece
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x, (int)Location.y - i);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
             {
                 if (ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
                     list.Add(c);
@@ -85,7 +85,8 @@ public class Castle : BasePiece
     }
     public void Castling(Eplayer player, bool is_left)
     {
-        if(player == Eplayer.BLACK )
+        Sound_CTL.Current.PlaySound(Esound.CASTLING);
+        if (player == Eplayer.BLACK )
         {
             if (is_left == true)
             {
@@ -115,5 +116,6 @@ public class Castle : BasePiece
                 mousePos.z = -1;
             }
         }
+        _currentCell.SetPieces(this);
     }
 }

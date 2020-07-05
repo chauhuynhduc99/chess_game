@@ -45,7 +45,7 @@ public class ChessBoard : MonoBehaviour
 
                 Cells[i][j] = c.GetComponent<cell>();
                 c.transform.parent = this.transform;
-                
+
                 if ((i + j) % 2 == 0)
                     Cells[i][j].color = Ecell_color.WHITE;
                 else

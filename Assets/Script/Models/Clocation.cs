@@ -14,12 +14,14 @@ namespace Assets.Script.Models
         public Clocation(int x, int y)
         {
             X = x;
-            Y = y; 
+            Y = y;
         }
-
-        public override string ToString()
+        public bool Check_Location()
         {
-            return string.Format("[{0},{1}]", X, Y);
+            if (X < 8 && X >= 0 && Y < 8 && Y >= 0)
+                return true;
+            else
+                return false;
         }
     }
 }

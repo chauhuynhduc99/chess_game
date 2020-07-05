@@ -10,6 +10,7 @@ public class quad : MonoBehaviour
         if (pro_P.Current.done == true)
         {
             Destroy(this.gameObject);
+            Sound_CTL.Current.PlaySound(Esound.MOVE);
         }
     }
 }

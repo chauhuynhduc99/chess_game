@@ -13,36 +13,36 @@ public class Knight : BasePiece
         #region Knight Location
         //+1 +2
         c = new Clocation((int)Location.x + 1, (int)Location.y + 2);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
         //+2 +1
         c = new Clocation((int)Location.x + 2, (int)Location.y + 1);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
 
         //+2 -1
         c = new Clocation((int)Location.x + 2, (int)Location.y - 1);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
         //+1 -2
         c = new Clocation((int)Location.x + 1, (int)Location.y - 2);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
         //-1 -2
         c = new Clocation((int)Location.x - 1, (int)Location.y - 2);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
         //-2 -1
         c = new Clocation((int)Location.x - 2, (int)Location.y - 1);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
         //-2 +1
         c = new Clocation((int)Location.x - 2, (int)Location.y + 1);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
         //-1 +2
         c = new Clocation((int)Location.x - 1, (int)Location.y + 2);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
         #endregion
 

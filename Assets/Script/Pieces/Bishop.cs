@@ -14,7 +14,7 @@ public class Bishop : BasePiece
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x + i, (int)Location.y + i);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
             {
                 if (ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
                     list.Add(c);
@@ -28,7 +28,7 @@ public class Bishop : BasePiece
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x - i, (int)Location.y + i);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
             {
                 if (ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
                     list.Add(c);
@@ -42,7 +42,7 @@ public class Bishop : BasePiece
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x + i, (int)Location.y - i);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
             {
                 if (ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
                     list.Add(c);
@@ -56,7 +56,7 @@ public class Bishop : BasePiece
         for (int i = 1; i < 8; i++)
         {
             c = new Clocation((int)Location.x - i, (int)Location.y - i);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
             {
                 if (ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
                     list.Add(c);

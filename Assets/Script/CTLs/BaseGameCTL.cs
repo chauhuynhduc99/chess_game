@@ -19,6 +19,13 @@ public class BaseGameCTL : MonoBehaviour
             CurrentPlayer = Eplayer.BLACK;
         else
             CurrentPlayer = Eplayer.WHITE;
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                ChessBoard.Current.cells[i][j].SetCellState(Ecell_state.NORMAL);
+            }
+        }
     }
     public Egame_state CheckGameState()
     {

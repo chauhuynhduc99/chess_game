@@ -16,40 +16,45 @@ public class Pawn : BasePiece
         {
             //0 +1
             c = new Clocation((int)Location.x, (int)Location.y + 1);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
                 list.Add(c);
             //0 +2
-            c = new Clocation((int)Location.x, (int)Location.y + 2);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
-                list.Add(c);
-
+            if (ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
+            {
+                c = new Clocation((int)Location.x, (int)Location.y + 2);
+                if (c.Check_Location())
+                    list.Add(c);
+            }
             //+1 +1
             c = new Clocation((int)Location.x + 1, (int)Location.y + 1);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
                 list.Add(c);
             //-1 +1
             c = new Clocation((int)Location.x - 1, (int)Location.y + 1);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
                 list.Add(c);
         }
         else
         {
             //0 -1
             c = new Clocation((int)Location.x, (int)Location.y - 1);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
                 list.Add(c);
             //0 -2
-            c = new Clocation((int)Location.x, (int)Location.y - 2);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
-                list.Add(c);
+            if(ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
+            {
+                c = new Clocation((int)Location.x, (int)Location.y - 2);
+                if (c.Check_Location())
+                    list.Add(c);
+            }
 
             //-1 -1
             c = new Clocation((int)Location.x - 1, (int)Location.y - 1);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
                 list.Add(c);
             //+1 -1
             c = new Clocation((int)Location.x + 1, (int)Location.y - 1);
-            if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+            if (c.Check_Location())
                 list.Add(c);
         }
         #endregion

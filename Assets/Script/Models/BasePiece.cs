@@ -42,13 +42,11 @@ public abstract class BasePiece : MonoBehaviour
     public abstract void Move();
     private void EndMove()
     {
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                ChessBoard.Current.cells[i][j].SetCellState(Ecell_state.NORMAL);
-            }
-        }
+        foreach(cell item in _canMovecells)
+            item.SetCellState(Ecell_state.NORMAL);
+        foreach (cell item in _target)
+            item.SetCellState(Ecell_state.NORMAL);
+        _currentCell.SetCellState(Ecell_state.NORMAL);
         //Reset lại list sau khi di chuyển quân cờ
         _canMovecells = new List<cell>();
         _target = new List<cell>();
@@ -98,6 +96,7 @@ public abstract class BasePiece : MonoBehaviour
                 this._currentCell.SetPieces(this);
                 old_cell.SetPieces(null);
                 this.Location = mousePos;
+                Sound_CTL.Current.PlaySound(Esound.MOVE);
                 break;
             }
         }
@@ -116,6 +115,7 @@ public abstract class BasePiece : MonoBehaviour
                 this._currentCell.SetPieces(this);
                 old_cell.SetPieces(null);
                 this.Location = mousePos;
+                Sound_CTL.Current.PlaySound(Esound.HIT);
                 break;
             }
         }
@@ -125,10 +125,11 @@ public abstract class BasePiece : MonoBehaviour
         mousePos = this.Location;
         mousePos.z = -1;
         EndMove();
-        if(_currentCell != old_cell)
+        if (_currentCell != old_cell)
         {
             is_it_moved = true;
             BaseGameCTL.Current.SwitchTurn();
+            old_cell.SetCellState(Ecell_state.SELECTED);
         }
     }
     protected void Update()

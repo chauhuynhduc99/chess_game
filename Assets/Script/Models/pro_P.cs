@@ -10,7 +10,6 @@ public class pro_P : MonoBehaviour
     private GameObject quad;
     public bool done;
 
-    //out thao tác trực tiếp với biến quad truyền vào (không cần khởi tạo giá trị lúc gọi hàm)
     public void Promotion(BasePiece pawn)
     {
         done = false;

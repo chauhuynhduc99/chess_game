@@ -16,42 +16,42 @@ public class King : BasePiece
         #region King Location
         //0 +1
         c = new Clocation((int)Location.x, (int)Location.y + 1);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
 
         //0 -1
         c = new Clocation((int)Location.x, (int)Location.y - 1);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
 
         //+1 0
         c = new Clocation((int)Location.x + 1, (int)Location.y);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
 
         //-1 0
         c = new Clocation((int)Location.x - 1, (int)Location.y);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
 
         //+1 +1
         c = new Clocation((int)Location.x + 1, (int)Location.y + 1);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
 
         //+1 -1
         c = new Clocation((int)Location.x + 1, (int)Location.y - 1);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
 
         //-1 +1
         c = new Clocation((int)Location.x - 1, (int)Location.y + 1);
-        if (c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if (c.Check_Location())
             list.Add(c);
 
         //-1 -1
         c = new Clocation((int)Location.x - 1, (int)Location.y - 1);
-        if(c.X < 8 && c.X >= 0 && c.Y < 8 && c.Y >= 0)
+        if(c.Check_Location())
             list.Add(c);
 
         //Nhập thành
@@ -84,11 +84,13 @@ public class King : BasePiece
     private void Castling_right()
     {
         if (ChessBoard.Current.cells[5][0].CurrentPiece == null && ChessBoard.Current.cells[6][0].CurrentPiece == null 
-            && ChessBoard.Current.cells[7][0].CurrentPiece.Is_it_moved == false)
+            && ChessBoard.Current.cells[7][0].CurrentPiece.Is_it_moved == false
+            && ChessBoard.Current.cells[7][0].CurrentPiece.Player == this.Player)
             _canMovecells.Add(ChessBoard.Current.cells[6][0]);
 
         else if (ChessBoard.Current.cells[5][7].CurrentPiece == null && ChessBoard.Current.cells[6][7].CurrentPiece == null 
-            && ChessBoard.Current.cells[7][7].CurrentPiece.Is_it_moved == false)
+            && ChessBoard.Current.cells[7][7].CurrentPiece.Is_it_moved == false
+            && ChessBoard.Current.cells[7][7].CurrentPiece.Player == this.Player)
             _canMovecells.Add(ChessBoard.Current.cells[6][7]);
 
         else
@@ -97,11 +99,13 @@ public class King : BasePiece
     private void Castling_left()
     {
         if (ChessBoard.Current.cells[1][0].CurrentPiece == null && ChessBoard.Current.cells[2][0].CurrentPiece == null 
-            && ChessBoard.Current.cells[3][0].CurrentPiece == null && ChessBoard.Current.cells[0][0].CurrentPiece.Is_it_moved == false )
+            && ChessBoard.Current.cells[3][0].CurrentPiece == null && ChessBoard.Current.cells[0][0].CurrentPiece.Is_it_moved == false 
+            && ChessBoard.Current.cells[0][0].CurrentPiece.Player == this.Player)
             _canMovecells.Add(ChessBoard.Current.cells[2][0]);
 
         else if (ChessBoard.Current.cells[1][7].CurrentPiece == null && ChessBoard.Current.cells[2][7].CurrentPiece == null
-            && ChessBoard.Current.cells[3][7].CurrentPiece == null && ChessBoard.Current.cells[0][7].CurrentPiece.Is_it_moved == false)
+            && ChessBoard.Current.cells[3][7].CurrentPiece == null && ChessBoard.Current.cells[0][7].CurrentPiece.Is_it_moved == false
+            && ChessBoard.Current.cells[0][7].CurrentPiece.Player == this.Player)
             _canMovecells.Add(ChessBoard.Current.cells[2][7]);
 
         else

@@ -17,6 +17,7 @@ public class pro_P : MonoBehaviour
         quad.transform.parent = this.transform;
         ProPawn = pawn;
     }
+
     private void Update()
     {
         Current = this;

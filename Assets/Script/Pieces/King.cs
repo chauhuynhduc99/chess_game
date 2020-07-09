@@ -8,11 +8,8 @@ public class King : BasePiece
 {
     private bool can_do_castling = false;
 
-    public override void Move()
+    public override void Moving_rule()
     {
-        List<Clocation> list = new List<Clocation>();
-        Clocation c;
-
         #region King Location
         //0 +1
         c = new Clocation((int)Location.x, (int)Location.y + 1);
@@ -65,20 +62,6 @@ public class King : BasePiece
         else
             can_do_castling = false;
         #endregion
-
-        foreach (var item in list)
-        {
-            cell Cell = ChessBoard.Current.cells[item.X][item.Y];
-            if (Cell.CurrentPiece == null)
-                _canMovecells.Add(Cell);
-            else if (Cell.CurrentPiece.Player != _player)
-                _target.Add(Cell);
-        }
-
-        foreach (var item in _canMovecells)
-            item.SetCellState(Ecell_state.HOVER);
-        foreach (var item in _target)
-            item.SetCellState(Ecell_state.TARGETED);
     }
 
     private void Castling_right()

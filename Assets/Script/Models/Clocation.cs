@@ -16,6 +16,7 @@ namespace Assets.Script.Models
             X = x;
             Y = y;
         }
+
         public bool Check_Location()
         {
             if (X < 8 && X >= 0 && Y < 8 && Y >= 0)

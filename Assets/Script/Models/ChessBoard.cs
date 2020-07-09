@@ -7,8 +7,6 @@ public class ChessBoard : MonoBehaviour
 {
     #region Field
     private cell[][] Cells;
-    private cell CurrentHoverCell = null;
-    private float Cell_size = -1;
     public static ChessBoard Current;
     private List<BasePiece> pieces;
     public GameObject cellPrefap;
@@ -17,21 +15,11 @@ public class ChessBoard : MonoBehaviour
     #endregion
 
     public cell[][] cells { get { return Cells; } set { Cells = value; } }
-    public float CELL_SIZE
-    {
-        get
-        {
-            if (Cell_size < 0)
-                Cell_size = cellPrefap.GetComponent<cell>().size;
-            return Cell_size;
-        }
-    }
-    
     public Vector3 Calculate_Position(int i, int j)
     {
-        float size = cellPrefap.GetComponent<cell>().size;
-        return base_Position + new Vector3(i * size, j * size,0);
+        return base_Position + new Vector3(i, j, 0);
     }
+
     private void Init_ChessBoard()
     {
         Cells = new cell[8][];

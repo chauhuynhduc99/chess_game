@@ -120,6 +120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   QuadPrefap: {fileID: 0}
+  done: 0
 --- !u!1 &2385678301176526871
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,6 +350,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   QuadPrefap: {fileID: 0}
+  done: 0
 --- !u!1 &4308566089734635829
 GameObject:
   m_ObjectHideFlags: 0
@@ -469,6 +471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   QuadPrefap: {fileID: 0}
+  done: 0
 --- !u!1 &4422061004366858187
 GameObject:
   m_ObjectHideFlags: 0
@@ -589,3 +592,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   QuadPrefap: {fileID: 0}
+  done: 0

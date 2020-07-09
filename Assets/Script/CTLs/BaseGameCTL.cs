@@ -9,6 +9,7 @@ public class BaseGameCTL : MonoBehaviour
     
     private Egame_state _gameState;
     public static BaseGameCTL Current;
+    public Text txt;
 
     public Eplayer CurrentPlayer { get; private set; }
     public Egame_state GameState { get { return _gameState; } set { _gameState = value; } }
@@ -34,7 +35,7 @@ public class BaseGameCTL : MonoBehaviour
     public void end_game(Eplayer winPlayer)
     {
         GameState = Egame_state.END_GAME;
-        Debug.Log("WinPlayer : " + winPlayer);
+        txt.text = "WinPlayer : " + winPlayer;
     }
 
     private void Awake()

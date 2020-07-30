@@ -20,6 +20,12 @@ public class ChessBoard : MonoBehaviour
         return base_Position + new Vector3(i, j, 0);
     }
 
+    [ContextMenu("Let_Start")]
+    public void Let_Start()
+    {
+        Init_ChessBoard();
+        Init_ChessPieces();
+    }
     private void Init_ChessBoard()
     {
         Cells = new cell[8][];
@@ -92,11 +98,6 @@ public class ChessBoard : MonoBehaviour
         }
     }
 
-    private void Start()
-    {
-        Init_ChessBoard();
-        Init_ChessPieces();
-    }
     private void Awake()
     {
         Current = this;

@@ -43,4 +43,8 @@ public class Knight : BasePiece
             list.Add(c);
         #endregion
     }
+    private void Awake()
+    {
+        value = 350;
+    }
 }

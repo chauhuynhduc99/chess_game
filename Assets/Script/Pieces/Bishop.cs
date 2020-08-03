@@ -66,4 +66,8 @@ public class Bishop : BasePiece
         }
         #endregion
     }
+    private void Awake()
+    {
+        value = 350;
+    }
 }

@@ -121,5 +121,9 @@ public class Queen : BasePiece
             }
         }
         #endregion
+        private void Awake()
+        {
+            value = 900;
+        }
     }
 }

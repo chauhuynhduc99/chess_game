@@ -8,12 +8,61 @@ public class ChessBoard : MonoBehaviour
     #region Field
     private cell[][] Cells;
     public static ChessBoard Current;
-    private List<BasePiece> pieces;
     public GameObject cellPrefap;
     public Vector3 base_Position = Vector3.zero;
     public LayerMask CellLayerMask = 0;
+    public List<BasePiece> AllActivePieces;
+    public List<BasePiece> Black_Pieces
+    {
+        get
+        {
+            foreach(BasePiece item in AllActivePieces)
+            {
+                if (item.Player == Eplayer.BLACK)
+                    Black_Pieces.Add(item);
+            }
+            return Black_Pieces;
+        }
+    }
+    public List<BasePiece> White_Pieces
+    {
+        get
+        {
+            foreach (BasePiece item in AllActivePieces)
+            {
+                if (item.Player == Eplayer.WHITE)
+                    White_Pieces.Add(item);
+            }
+            return White_Pieces;
+        }
+    }
     #endregion
-
+    public King Black_King
+    {
+        get
+        {
+            foreach (BasePiece item in Black_Pieces)
+            {
+                if (item.Value == 1000)
+                    Black_King = (King)item;
+            }
+            return Black_King;
+        }
+        private set { Black_King = value; }
+    }
+    public King White_King
+    {
+        get
+        {
+            foreach (BasePiece item in White_Pieces)
+            {
+                if (item.Value == 1000)
+                    White_King = (King)item;
+            }
+            return White_King;
+        }
+        private set { White_King = value; }
+    }
     public cell[][] cells { get { return Cells; } set { Cells = value; } }
     public Vector3 Calculate_Position(int i, int j)
     {
@@ -96,8 +145,28 @@ public class ChessBoard : MonoBehaviour
             p.SetOriginalLocation(item.X, item.Y);
             chess_piece.transform.parent = this.transform;
         }
-    }
 
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (ChessBoard.Current.cells[i][j].CurrentPiece != null)
+                    ChessBoard.Current.AllActivePieces.Add(ChessBoard.Current.cells[i][j].CurrentPiece);
+            }
+        }
+    }
+    public bool isTheSame(ChessBoard board)
+    {
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (this.cells[i][j].CurrentPiece !=  board.cells[i][j].CurrentPiece)
+                    return false;
+            }
+        }
+        return true;
+    }
     private void Awake()
     {
         Current = this;

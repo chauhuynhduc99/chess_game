@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using Assets.Script.Models;
 
@@ -12,7 +12,10 @@ public abstract class BasePiece : MonoBehaviour
     protected List<Clocation> list = new List<Clocation>();
     protected Clocation c;
     protected cell _currentCell;
+    protected int piece_pos;
+    protected int value;
     private bool mouse_down;
+    protected Etype type;
     protected bool is_it_moved;
 
     [SerializeField]
@@ -27,9 +30,19 @@ public abstract class BasePiece : MonoBehaviour
     private float maxY = 7;
     #endregion
 
+    public int Value { get { return value; } }
+    public int Piece_Pos 
+    { 
+        get 
+        {
+            piece_pos = Convert.ToInt32(Location.x + 1 + Location.y * 8);
+            return piece_pos;
+        } 
+    }
     public Eplayer Player { get { return _player; } protected set { _player = value; } }
     public Vector2 Location { get;protected set; }
     public cell CurrentCell { get { return _currentCell; } set { _currentCell = value; } }
+    public Etype Type { get { return type; } }
     public bool Is_it_moved { get { return is_it_moved; } }
 
     public void SetOriginalLocation(int x, int y)//Khởi tạo vị trí ban đầu
@@ -66,12 +79,38 @@ public abstract class BasePiece : MonoBehaviour
         foreach (cell item in _target)
             item.SetCellState(Ecell_state.NORMAL);
         _currentCell.SetCellState(Ecell_state.NORMAL);
-        //Reset lại list sau khi di chuyển quân cờ
-        _canMovecells = new List<cell>();
-        _target = new List<cell>();
-        list = new List<Clocation>();
+
+        ChessBoard.Current.AllActivePieces = null;
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                if (ChessBoard.Current.cells[i][j].CurrentPiece != null)
+                    ChessBoard.Current.AllActivePieces.Add(ChessBoard.Current.cells[i][j].CurrentPiece);
+            }
+        }
+
+        
     }
-    
+    public List<Clocation> getLegalMoves()
+    {
+        list = new List<Clocation>();
+        Moving_rule();
+        return list;
+    }
+    public List<cell> getTarget()
+    {
+        list = new List<Clocation>();
+        _target = new List<cell>();
+        Moving_rule();
+        foreach (Clocation item in list)
+        {
+            cell Cell = ChessBoard.Current.cells[item.X][item.Y];
+            if (Cell.CurrentPiece != null && Cell.CurrentPiece.Player != _player)
+                _target.Add(Cell);
+        }
+        return _target;
+    }
 
     protected void Start()
     {
@@ -84,6 +123,9 @@ public abstract class BasePiece : MonoBehaviour
         {
             return;
         }
+        _canMovecells = new List<cell>();
+        _target = new List<cell>();
+        list = new List<Clocation>();
         //Lưu vị trí của quân cờ vào Location
         this.Location = _currentCell.transform.position;
         mouse_down = true;

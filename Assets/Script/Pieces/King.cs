@@ -7,7 +7,6 @@ using UnityEngine;
 public class King : BasePiece
 {
     private bool can_do_castling = false;
-
     public override void Moving_rule()
     {
         #region King Location
@@ -63,7 +62,6 @@ public class King : BasePiece
             can_do_castling = false;
         #endregion
     }
-
     private void Castling_right()
     {
         if (ChessBoard.Current.cells[5][0].CurrentPiece == null && ChessBoard.Current.cells[6][0].CurrentPiece == null 
@@ -94,7 +92,33 @@ public class King : BasePiece
         else
             return;
     }
+    public bool isInCheck()
+    {
+        if(Player == Eplayer.BLACK)
+        {
+            foreach (BasePiece item in ChessBoard.Current.White_Pieces)
+            {
+                foreach (cell Cell in item.getTarget())
+                    if (Cell == this.CurrentCell)
+                        return true;
+            }
+        }
+        else
+        {
+            foreach (BasePiece item in ChessBoard.Current.Black_Pieces)
+            {
+                foreach (cell Cell in item.getTarget())
+                    if (Cell == this.CurrentCell)
+                        return true;
+            }
+        }
+        return false;
+    }
 
+    private void Awake()
+    {
+        value = 1000;
+    }
     protected override void OnMouseUp()
     {
         base.OnMouseUp();

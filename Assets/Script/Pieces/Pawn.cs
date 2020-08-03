@@ -67,4 +67,8 @@ public class Pawn : BasePiece
             }
         }
     }
+    private void Awake()
+    {
+        value = 100;
+    }
 }

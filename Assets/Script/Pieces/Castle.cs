@@ -102,4 +102,8 @@ public class Castle : BasePiece
         }
         _currentCell.SetPieces(this);
     }
+    private void Awake()
+    {
+        value = 525;
+    }
 }

@@ -121,9 +121,10 @@ public class Queen : BasePiece
             }
         }
         #endregion
-        private void Awake()
-        {
-            value = 900;
-        }
+    }
+    private void Awake()
+    {
+        value = 900;
+        type = Etype.QUEEN;
     }
 }

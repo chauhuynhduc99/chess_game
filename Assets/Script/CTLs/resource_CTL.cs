@@ -89,6 +89,4 @@ public class resource_CTL
             return Targeted_cell_white;
         }
     }
-
-    private resource_CTL() { }
 }

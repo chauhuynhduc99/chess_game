@@ -12,8 +12,7 @@ public class BaseGameCTL : MonoBehaviour
     public Text txt;
 
     public Eplayer CurrentPlayer { get; private set; }
-    public Egame_state GameState { get { return _gameState; } set { _gameState = value; } }
-
+    public Egame_state Game_State { set { _gameState = value; } }
     public void SwitchTurn()
     {
         if (CurrentPlayer == Eplayer.WHITE)
@@ -30,11 +29,11 @@ public class BaseGameCTL : MonoBehaviour
     }
     public Egame_state CheckGameState()
     {
-        return Egame_state.PLAYING;
+        return _gameState;
     }
     public void end_game(Eplayer winPlayer)
     {
-        GameState = Egame_state.END_GAME;
+        _gameState = Egame_state.END_GAME;
         txt.text = "WinPlayer : " + winPlayer;
     }
 
@@ -42,10 +41,6 @@ public class BaseGameCTL : MonoBehaviour
     {
         Current = this;
         CurrentPlayer = Eplayer.WHITE;
-        GameState = Egame_state.PLAYING;
-    }
-    private void Update()
-    {
-        Current = this;
+        _gameState = Egame_state.PLAYING;
     }
 }

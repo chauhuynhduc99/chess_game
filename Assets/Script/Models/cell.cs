@@ -80,14 +80,13 @@ public class cell : MonoBehaviour
             }
         }
     }
-
     public void SetCellState(Ecell_state cellState)
     {
         state = cellState;
     }
     public void SetPieces(BasePiece piece)
     {
-        this._currentPiece = piece;
+        _currentPiece = piece;
     }
 
     protected void Start()

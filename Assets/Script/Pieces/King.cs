@@ -114,10 +114,10 @@ public class King : BasePiece
         }
         return false;
     }
-
     private void Awake()
     {
-        value = 1000;
+        value = 10000;
+        type = Etype.KING;
     }
     protected override void OnMouseUp()
     {

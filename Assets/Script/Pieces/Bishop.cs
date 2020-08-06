@@ -69,5 +69,6 @@ public class Bishop : BasePiece
     private void Awake()
     {
         value = 350;
+        type = Etype.BISHOP;
     }
 }

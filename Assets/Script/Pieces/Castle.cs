@@ -105,5 +105,6 @@ public class Castle : BasePiece
     private void Awake()
     {
         value = 525;
+        type = Etype.CASTLE;
     }
 }

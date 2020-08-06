@@ -60,15 +60,16 @@ public class Pawn : BasePiece
         base.OnMouseUp();
         if((Location.y == 7 && Player == Eplayer.WHITE)|| (Location.y == 0 && Player == Eplayer.BLACK))
         {
-            if(BaseGameCTL.Current.GameState == Egame_state.PLAYING)
+            if(BaseGameCTL.Current.CheckGameState() == Egame_state.PLAYING)
             {
                 pro_P.Current.Promotion(this);
-                BaseGameCTL.Current.GameState = Egame_state.PAUSE;
+                BaseGameCTL.Current.Game_State = Egame_state.PAUSE;
             }
         }
     }
     private void Awake()
     {
         value = 100;
+        type = Etype.PAWN;
     }
 }

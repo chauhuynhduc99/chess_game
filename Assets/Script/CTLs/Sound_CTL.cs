@@ -7,10 +7,6 @@ public class Sound_CTL : MonoBehaviour
     public AudioClip Hit;
     public static Sound_CTL Current;
 
-    private void Start()
-    {
-        Current = this;
-    }
     public void PlaySound(Esound currentSound)
     {
         switch (currentSound)
@@ -31,5 +27,9 @@ public class Sound_CTL : MonoBehaviour
                 }
                 break;
         }
+    }
+    private void Awake()
+    {
+        Current = this;
     }
 }

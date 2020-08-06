@@ -11,7 +11,7 @@ public class quad : MonoBehaviour
         {
             Destroy(this.gameObject);
             Sound_CTL.Current.PlaySound(Esound.MOVE);
-            BaseGameCTL.Current.GameState = Egame_state.PLAYING;
+            BaseGameCTL.Current.Game_State = Egame_state.PLAYING;
         }
     }
 }

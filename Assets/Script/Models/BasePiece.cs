@@ -12,7 +12,6 @@ public abstract class BasePiece : MonoBehaviour
     protected List<Clocation> list = new List<Clocation>();
     protected Clocation c;
     protected cell _currentCell;
-    protected int piece_pos;
     protected int value;
     private bool mouse_down;
     protected Etype type;
@@ -29,16 +28,7 @@ public abstract class BasePiece : MonoBehaviour
     private float minY = 0;
     private float maxY = 7;
     #endregion
-
     public int Value { get { return value; } }
-    public int Piece_Pos 
-    { 
-        get 
-        {
-            piece_pos = Convert.ToInt32(Location.x + 1 + Location.y * 8);
-            return piece_pos;
-        } 
-    }
     public Eplayer Player { get { return _player; } protected set { _player = value; } }
     public Vector2 Location { get;protected set; }
     public cell CurrentCell { get { return _currentCell; } set { _currentCell = value; } }
@@ -56,7 +46,7 @@ public abstract class BasePiece : MonoBehaviour
         _currentCell.SetPieces(this);
     }
     public abstract void Moving_rule();
-    protected virtual void Show_Move_steps()
+    protected void Legal_Moves()
     {
         foreach (Clocation item in list)
         {
@@ -66,7 +56,9 @@ public abstract class BasePiece : MonoBehaviour
             else if (Cell.CurrentPiece.Player != _player)
                 _target.Add(Cell);
         }
-
+    }
+    protected virtual void Show_Move_steps()
+    {
         foreach (var item in _canMovecells)
             item.SetCellState(Ecell_state.HOVER);
         foreach (var item in _target)
@@ -79,24 +71,25 @@ public abstract class BasePiece : MonoBehaviour
         foreach (cell item in _target)
             item.SetCellState(Ecell_state.NORMAL);
         _currentCell.SetCellState(Ecell_state.NORMAL);
-
-        ChessBoard.Current.AllActivePieces = null;
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                if (ChessBoard.Current.cells[i][j].CurrentPiece != null)
-                    ChessBoard.Current.AllActivePieces.Add(ChessBoard.Current.cells[i][j].CurrentPiece);
-            }
-        }
-
-        
     }
-    public List<Clocation> getLegalMoves()
+    public List<cell> getLegalMoves()
     {
-        list = new List<Clocation>();
+        List<cell> Move = new List<cell>();
+        list.Clear();
+        _canMovecells.Clear();
+        _target.Clear();
         Moving_rule();
-        return list;
+        foreach (Clocation item in list)
+        {
+            cell Cell = ChessBoard.Current.cells[item.X][item.Y];
+            if (Cell.CurrentPiece == null)
+                _canMovecells.Add(Cell);
+            else if (Cell.CurrentPiece.Player != _player)
+                _target.Add(Cell);
+        }
+        Move.AddRange(_canMovecells);
+        Move.AddRange(_target);
+        return Move;
     }
     public List<cell> getTarget()
     {
@@ -111,6 +104,11 @@ public abstract class BasePiece : MonoBehaviour
         }
         return _target;
     }
+    public bool Is_legal_Move(cell move)
+    {
+        return getLegalMoves().Contains(move);
+    }
+    
 
     protected void Start()
     {
@@ -118,7 +116,7 @@ public abstract class BasePiece : MonoBehaviour
     }
     protected void OnMouseDown()
     {
-        if (BaseGameCTL.Current.GameState != Egame_state.PLAYING 
+        if (BaseGameCTL.Current.CheckGameState() != Egame_state.PLAYING 
             || BaseGameCTL.Current.CurrentPlayer != Player)
         {
             return;
@@ -131,11 +129,12 @@ public abstract class BasePiece : MonoBehaviour
         mouse_down = true;
         _currentCell.SetCellState(Ecell_state.SELECTED);
         Moving_rule();
+        Legal_Moves();
         Show_Move_steps();
     }
     protected virtual void OnMouseUp()
     {
-        if (BaseGameCTL.Current.GameState != Egame_state.PLAYING
+        if (BaseGameCTL.Current.CheckGameState() != Egame_state.PLAYING
             || BaseGameCTL.Current.CurrentPlayer != Player)
         {
             return;
@@ -169,10 +168,10 @@ public abstract class BasePiece : MonoBehaviour
         {
             if (ChessBoard.Current.cells[(int)mousePos.x][(int)mousePos.y] == item)
             {
-                BasePiece enemy = item.CurrentPiece;
-                Destroy(enemy.gameObject);
-                if (enemy is King == true)
+                ChessBoard.Current.All_Active_Pieces.Remove(item.CurrentPiece);
+                if (item.CurrentPiece.Type == Etype.KING)
                     BaseGameCTL.Current.end_game(this.Player);
+                Destroy(item.CurrentPiece.gameObject);
                 this._currentCell = item;
                 this._currentCell.SetPieces(this);
                 old_cell.SetPieces(null);

@@ -4,3 +4,4 @@ public enum Egame_state { PLAYING, END_GAME, PAUSE };
 public enum Eplayer { BLACK, WHITE };
 public enum Esound { MOVE, CASTLING, HIT };
 public enum Etype { KING, QUEEN, KNIGHT, CASTLE, BISHOP, PAWN };
+public enum Eside { HUMAN, AI };

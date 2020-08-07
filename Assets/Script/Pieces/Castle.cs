@@ -66,11 +66,11 @@ public class Castle : BasePiece
             }
             #endregion
         }
-    public void Castling(Eplayer player, bool is_left)
+    public void Castling(Eside side, bool is_left)
     {
         Sound_CTL.Current.PlaySound(Esound.CASTLING);
         _currentCell.SetPieces(null);
-        if (player == Eplayer.BLACK)
+        if (side == Eside.AI)
         {
             if (is_left == true)
             {

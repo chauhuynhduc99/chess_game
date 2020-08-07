@@ -124,25 +124,25 @@ public class King : BasePiece
         base.OnMouseUp();
         if (can_do_castling == true)
         {
-            if (_currentCell == ChessBoard.Current.cells[6][0] && Player == Eplayer.WHITE)
+            if (_currentCell == ChessBoard.Current.cells[6][0] && Side == Eside.HUMAN)
             {
                 Castle p = ChessBoard.Current.cells[7][0].CurrentPiece as Castle;
-                p.Castling(Player, false);
+                p.Castling(Side, false);
             }
-            else if (_currentCell == ChessBoard.Current.cells[6][7] && Player == Eplayer.BLACK)
+            else if (_currentCell == ChessBoard.Current.cells[6][7] && Side == Eside.AI)
             {
                 Castle p = ChessBoard.Current.cells[7][7].CurrentPiece as Castle;
-                p.Castling(Player, false);
+                p.Castling(Side, false);
             }
-            else if (_currentCell == ChessBoard.Current.cells[2][0] && Player == Eplayer.WHITE)
+            else if (_currentCell == ChessBoard.Current.cells[2][0] && Side == Eside.HUMAN)
             {
                 Castle p = ChessBoard.Current.cells[0][0].CurrentPiece as Castle;
-                p.Castling(Player, true);
+                p.Castling(Side, true);
             }
-            else if (_currentCell == ChessBoard.Current.cells[2][7] && Player == Eplayer.BLACK)
+            else if (_currentCell == ChessBoard.Current.cells[2][7] && Side == Eside.AI)
             {
                 Castle p = ChessBoard.Current.cells[0][7].CurrentPiece as Castle;
-                p.Castling(Player, true);
+                p.Castling(Side, true);
             }
             else
                 can_do_castling = false;

@@ -9,7 +9,7 @@ public class Pawn : BasePiece
     public override void Moving_rule()
     {
         #region Pawn Location
-        if (this.Player == Eplayer.WHITE)
+        if (this.Side == Eside.HUMAN)
         {
             //0 +1
             c = new Clocation((int)Location.x, (int)Location.y + 1);
@@ -58,7 +58,7 @@ public class Pawn : BasePiece
     protected override void OnMouseUp()
     {
         base.OnMouseUp();
-        if((Location.y == 7 && Player == Eplayer.WHITE)|| (Location.y == 0 && Player == Eplayer.BLACK))
+        if((Location.y == 7 && Side == Eside.HUMAN)|| (Location.y == 0 && Side == Eside.AI))
         {
             if(BaseGameCTL.Current.CheckGameState() == Egame_state.PLAYING)
             {

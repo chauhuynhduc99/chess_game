@@ -14,6 +14,7 @@ public abstract class BasePiece : MonoBehaviour
     protected cell _currentCell;
     protected int value;
     private bool mouse_down;
+    private Eside side;
     protected Etype type;
     protected bool is_it_moved;
 
@@ -28,6 +29,7 @@ public abstract class BasePiece : MonoBehaviour
     private float minY = 0;
     private float maxY = 7;
     #endregion
+    public Eside Side { get { return side; } set { side = value; } }
     public int Value { get { return value; } }
     public Eplayer Player { get { return _player; } protected set { _player = value; } }
     public Vector2 Location { get;protected set; }
@@ -57,7 +59,7 @@ public abstract class BasePiece : MonoBehaviour
                 _target.Add(Cell);
         }
     }
-    protected virtual void Show_Move_steps()
+    protected void Show_Move_steps()
     {
         foreach (var item in _canMovecells)
             item.SetCellState(Ecell_state.HOVER);
@@ -169,6 +171,10 @@ public abstract class BasePiece : MonoBehaviour
             if (ChessBoard.Current.cells[(int)mousePos.x][(int)mousePos.y] == item)
             {
                 ChessBoard.Current.All_Active_Pieces.Remove(item.CurrentPiece);
+                if (item.CurrentPiece.Player == Eplayer.BLACK)
+                    ChessBoard.Current.Black_Pieces.Remove(item.CurrentPiece);
+                else
+                    ChessBoard.Current.White_Pieces.Remove(item.CurrentPiece);
                 if (item.CurrentPiece.Type == Etype.KING)
                     BaseGameCTL.Current.end_game(this.Player);
                 Destroy(item.CurrentPiece.gameObject);

@@ -11,16 +11,20 @@ public class queen : pro_P
             GameObject chess_piece = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Pieces/White_Q"));
             BasePiece p = chess_piece.GetComponent<BasePiece>();
             p.SetOriginalLocation((int)ProPawn.Location.x, (int)ProPawn.Location.y);
-            chess_piece.transform.parent = ChessBoard.Current.transform;
+            chess_piece.transform.parent = ChessBoard.Current.Chess_Pieces.transform;
             p.CurrentCell.SetPieces(p);
+            ChessBoard.Current.White_Pieces.Add(p);
+            ChessBoard.Current.All_Active_Pieces.Add(p);
         }
         else
         {
             GameObject chess_piece = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Pieces/Black_Q"));
             BasePiece p = chess_piece.GetComponent<BasePiece>();
             p.SetOriginalLocation((int)ProPawn.Location.x, (int)ProPawn.Location.y);
-            chess_piece.transform.parent = ChessBoard.Current.transform;
+            chess_piece.transform.parent = ChessBoard.Current.Chess_Pieces.transform;
             p.CurrentCell.SetPieces(p);
+            ChessBoard.Current.Black_Pieces.Add(p);
+            ChessBoard.Current.All_Active_Pieces.Add(p);
         }
         Destroy(ProPawn.gameObject);
         pro_P.Current.done = true;

@@ -71,4 +71,9 @@ public class Bishop : BasePiece
         value = 350;
         type = Etype.BISHOP;
     }
+    protected override void OnMouseUp()
+    {
+        base.OnMouseUp();
+        BaseGameCTL.Current.AI_turn();
+    }
 }

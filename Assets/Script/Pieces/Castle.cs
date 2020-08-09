@@ -107,4 +107,9 @@ public class Castle : BasePiece
         value = 525;
         type = Etype.CASTLE;
     }
+    protected override void OnMouseUp()
+    {
+        base.OnMouseUp();
+        BaseGameCTL.Current.AI_turn();
+    }
 }

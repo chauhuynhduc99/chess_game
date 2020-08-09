@@ -32,7 +32,7 @@ public abstract class BasePiece : MonoBehaviour
     public Eside Side { get { return side; } set { side = value; } }
     public int Value { get { return value; } }
     public Eplayer Player { get { return _player; } protected set { _player = value; } }
-    public Vector2 Location { get;protected set; }
+    public Vector2 Location { get; protected set; }
     public cell CurrentCell { get { return _currentCell; } set { _currentCell = value; } }
     public Etype Type { get { return type; } }
     public bool Is_it_moved { get { return is_it_moved; } }
@@ -76,27 +76,21 @@ public abstract class BasePiece : MonoBehaviour
     }
     public List<cell> getLegalMoves()
     {
-        List<cell> Move = new List<cell>();
         list.Clear();
         _canMovecells.Clear();
-        _target.Clear();
         Moving_rule();
         foreach (Clocation item in list)
         {
             cell Cell = ChessBoard.Current.cells[item.X][item.Y];
-            if (Cell.CurrentPiece == null)
+            if (Cell.CurrentPiece == null || Cell.CurrentPiece.Player != _player)
                 _canMovecells.Add(Cell);
-            else if (Cell.CurrentPiece.Player != _player)
-                _target.Add(Cell);
         }
-        Move.AddRange(_canMovecells);
-        Move.AddRange(_target);
-        return Move;
+        return _canMovecells;
     }
     public List<cell> getTarget()
     {
-        list = new List<Clocation>();
-        _target = new List<cell>();
+        list.Clear();
+        _target.Clear();
         Moving_rule();
         foreach (Clocation item in list)
         {
@@ -110,8 +104,70 @@ public abstract class BasePiece : MonoBehaviour
     {
         return getLegalMoves().Contains(move);
     }
-    
-
+    public bool has_Escaped_move()
+    {
+        List<cell> moves = getLegalMoves();
+        if (Player == Eplayer.BLACK)
+        {
+            foreach (cell move in moves)
+            {
+                foreach (BasePiece item in ChessBoard.Current.White_Pieces)
+                {
+                    foreach (cell target in item.getTarget())
+                        if (target == move)
+                            moves.Remove(move);
+                }
+            }
+        }
+        else
+        {
+            foreach (cell move in moves)
+            {
+                foreach (BasePiece item in ChessBoard.Current.Black_Pieces)
+                {
+                    foreach (cell target in item.getTarget())
+                        if (target == move)
+                            moves.Remove(move);
+                }
+            }
+        }
+        if (moves == null)
+            return false;
+        else
+            return true;
+    }
+    public void AI_move(cell moveto)
+    {
+        mousePos = moveto.transform.position;
+        cell old_cell = _currentCell;
+        if (moveto.CurrentPiece == null)
+        {
+            moveto.SetPieces(this);
+            _currentCell.SetPieces(null);
+            _currentCell = moveto;
+            Location = mousePos;
+            Sound_CTL.Current.PlaySound(Esound.MOVE);
+        }
+        else
+        {
+            ChessBoard.Current.All_Active_Pieces.Remove(moveto.CurrentPiece);
+            if (moveto.CurrentPiece.Player == Eplayer.BLACK)
+                ChessBoard.Current.Black_Pieces.Remove(moveto.CurrentPiece);
+            else
+                ChessBoard.Current.White_Pieces.Remove(moveto.CurrentPiece);
+            if (moveto.CurrentPiece.Type == Etype.KING)
+                BaseGameCTL.Current.end_game(Player);
+            Destroy(moveto.CurrentPiece.gameObject);
+            moveto.SetPieces(this);
+            _currentCell.SetPieces(null);
+            _currentCell = moveto;
+            Location = mousePos;
+            Sound_CTL.Current.PlaySound(Esound.HIT);
+        }
+        BaseGameCTL.Current.SwitchTurn();
+        is_it_moved = true;
+        old_cell.SetCellState(Ecell_state.SELECTED);
+    }
     protected void Start()
     {
         mousePos = transform.position;//Khởi tạo mouse_pos với vị trí ban đàu của quân cờ

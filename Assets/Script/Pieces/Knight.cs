@@ -48,4 +48,9 @@ public class Knight : BasePiece
         value = 350;
         type = Etype.KNIGHT;
     }
+    protected override void OnMouseUp()
+    {
+        base.OnMouseUp();
+        BaseGameCTL.Current.AI_turn();
+    }
 }

@@ -114,6 +114,13 @@ public class King : BasePiece
         }
         return false;
     }
+    public bool isCheckMate()
+    {
+        if (isInCheck() && !has_Escaped_move())
+            return true;
+        else
+            return false;
+    }
     private void Awake()
     {
         value = 10000;
@@ -147,6 +154,7 @@ public class King : BasePiece
             else
                 can_do_castling = false;
         }
+        BaseGameCTL.Current.AI_turn();
     }
 }
 

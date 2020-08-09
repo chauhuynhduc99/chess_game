@@ -16,12 +16,9 @@ public class Pawn : BasePiece
             if (c.Check_Location() && ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
                 list.Add(c);
             //0 +2
-            if (ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null && Is_it_moved == false)
-            {
-                c = new Clocation((int)Location.x, (int)Location.y + 2);
-                if (c.Check_Location())
-                    list.Add(c);
-            }
+            c = new Clocation((int)Location.x, (int)Location.y + 2);
+            if (c.Check_Location() && ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null && ChessBoard.Current.cells[c.X][c.Y - 1].CurrentPiece == null && is_it_moved == false)
+                list.Add(c);
             //+1 +1
             c = new Clocation((int)Location.x + 1, (int)Location.y + 1);
             if (c.Check_Location() && ChessBoard.Current.cells[c.X][c.Y].CurrentPiece != null)
@@ -38,12 +35,9 @@ public class Pawn : BasePiece
             if (c.Check_Location() && ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null)
                 list.Add(c);
             //0 -2
-            if(ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null && Is_it_moved == false)
-            {
-                c = new Clocation((int)Location.x, (int)Location.y - 2);
-                if (c.Check_Location())
-                    list.Add(c);
-            }
+            c = new Clocation((int)Location.x, (int)Location.y - 2);
+            if (c.Check_Location() && ChessBoard.Current.cells[c.X][c.Y].CurrentPiece == null && ChessBoard.Current.cells[c.X][c.Y + 1].CurrentPiece == null && is_it_moved == false)
+                list.Add(c);
             //-1 -1
             c = new Clocation((int)Location.x - 1, (int)Location.y - 1);
             if (c.Check_Location() && ChessBoard.Current.cells[c.X][c.Y].CurrentPiece != null)
@@ -54,6 +48,11 @@ public class Pawn : BasePiece
                 list.Add(c);
         }
         #endregion
+    }
+    private void Awake()
+    {
+        value = 100;
+        type = Etype.PAWN;
     }
     protected override void OnMouseUp()
     {
@@ -66,10 +65,7 @@ public class Pawn : BasePiece
                 BaseGameCTL.Current.Game_State = Egame_state.PAUSE;
             }
         }
+        BaseGameCTL.Current.AI_turn();
     }
-    private void Awake()
-    {
-        value = 100;
-        type = Etype.PAWN;
-    }
+
 }

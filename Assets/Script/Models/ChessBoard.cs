@@ -24,27 +24,58 @@ public class ChessBoard : MonoBehaviour
     public King Black_King { get { return black_King; } }
     public King White_King { get { return white_King; } }
     public cell[][] cells { get { return Cells; } set { Cells = value; } }
+
     public Vector3 Calculate_Position(int i, int j)
     {
         return base_Position + new Vector3(i, j, 0);
     }
+    
+    /*public List<List<cell>> getAll_Legal_Moves(Eplayer player)
+    {
+        List<cell> moveto = new List<cell>();
+        List<List<cell>> moves = new List<List<cell>>();
+        if (player == Eplayer.BLACK)
+        {
+            foreach (BasePiece item in black_Pieces)
+            {
+                foreach (cell move in item.getLegalMoves())
+                {
+                    moveto.Add(move);
+                }
+                moves.Add(moveto);
+            }
+        }
+        else
+        {
+            foreach (BasePiece item in white_Pieces)
+            {
+                foreach (cell move in item.getLegalMoves())
+                {
+                    moveto.Add(move);
+                }
+                moves.Add(moveto);
+            }
+        }
+        return moves;
+    }*/
 
-    [ContextMenu("CHOOSE_WHITE")]
     public void CHOOSE_WHITE()
     {
         Init_ChessBoard();
         Init_ChessPieces(Eplayer.WHITE);
         get_Side(Eplayer.WHITE);
+        AI.player = Eplayer.BLACK;
 
     }
-
-    [ContextMenu("CHOOSE_BLACK")]
+    [ContextMenu("CHOOSE_WHITE")]
     public void CHOOSE_BLACK()
     {
         Init_ChessBoard();
         Init_ChessPieces(Eplayer.BLACK);
         get_Side(Eplayer.BLACK);
+        AI.player = Eplayer.WHITE;
     }
+    [ContextMenu("CHOOSE_BLACK")]
     private void Init_ChessBoard()
     {
         Cells = new cell[8][];

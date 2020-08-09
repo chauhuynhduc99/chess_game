@@ -127,4 +127,9 @@ public class Queen : BasePiece
         value = 900;
         type = Etype.QUEEN;
     }
+    protected override void OnMouseUp()
+    {
+        base.OnMouseUp();
+        BaseGameCTL.Current.AI_turn();
+    }
 }

@@ -10,6 +10,7 @@ public class BaseGameCTL : MonoBehaviour
     private Egame_state _gameState;
     public static BaseGameCTL Current;
     public Text txt;
+    AI computer = new AI();
 
     public Eplayer CurrentPlayer { get; private set; }
     public Egame_state Game_State { set { _gameState = value; } }
@@ -25,6 +26,13 @@ public class BaseGameCTL : MonoBehaviour
             {
                 ChessBoard.Current.cells[i][j].SetCellState(Ecell_state.NORMAL);
             }
+        }
+    }
+    public void AI_turn()
+    {
+        if (CurrentPlayer == AI.player)
+        {
+            computer.find_move(ChessBoard.Current);
         }
     }
     public Egame_state CheckGameState()

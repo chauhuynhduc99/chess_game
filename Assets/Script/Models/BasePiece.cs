@@ -140,11 +140,11 @@ public abstract class BasePiece : MonoBehaviour
         this.Location = new Vector2(moveto.transform.position.x, moveto.transform.position.y);
         _currentCell.SetPieces(null);
         _currentCell = moveto;
-        moveto.SetPieces(this);
-        if (moveto.CurrentPiece != null && moveto.CurrentPiece.Side != side)
+        if (moveto.CurrentPiece != null && moveto.CurrentPiece.Player != _player)
         {
             moveto.CurrentPiece.Is_it_active = false;
         }
+        moveto.SetPieces(this);
     }
     public void Return(cell old_cell, cell return_from_cell, BasePiece piece)
     {

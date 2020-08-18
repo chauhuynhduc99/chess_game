@@ -1,5 +1,4 @@
-﻿using Assets.Script.Models;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -48,6 +47,37 @@ public class Pawn : BasePiece
                 list.Add(c);
         }
         #endregion
+    }
+    public override void AI_move(cell moveto)
+    {
+        base.AI_move(moveto);
+        if ((Location.y == 7 && Side == Eside.HUMAN) || (Location.y == 0 && Side == Eside.AI))
+        {
+            if (BaseGameCTL.Current.CheckGameState() == Egame_state.PLAYING)
+            {
+                if (Player == Eplayer.WHITE)
+                {
+                    GameObject chess_piece = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Pieces/White_Q"));
+                    BasePiece p = chess_piece.GetComponent<BasePiece>();
+                    p.SetOriginalLocation((int)Location.x, (int)Location.y);
+                    chess_piece.transform.parent = ChessBoard.Current.Chess_Pieces.transform;
+                    p.CurrentCell.SetPieces(p);
+                    ChessBoard.Current.White_Pieces.Add(p);
+                    ChessBoard.Current.All_piece.Add(p);
+                }
+                else
+                {
+                    GameObject chess_piece = GameObject.Instantiate<GameObject>(Resources.Load<GameObject>("Pieces/Black_Q"));
+                    BasePiece p = chess_piece.GetComponent<BasePiece>();
+                    p.SetOriginalLocation((int)Location.x, (int)Location.y);
+                    chess_piece.transform.parent = ChessBoard.Current.Chess_Pieces.transform;
+                    p.CurrentCell.SetPieces(p);
+                    ChessBoard.Current.Black_Pieces.Add(p);
+                    ChessBoard.Current.All_piece.Add(p);
+                }
+                Destroy(gameObject);
+            }
+        }
     }
     private void Awake()
     {

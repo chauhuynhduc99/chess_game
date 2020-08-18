@@ -16,10 +16,15 @@ public class BaseGameCTL : MonoBehaviour
     public Egame_state Game_State { set { _gameState = value; } }
     public void SwitchTurn()
     {
+        if (ChessBoard.Current.Black_King.isInCheck() || ChessBoard.Current.White_King.isInCheck())
+            txt.text = "Check!";
+        else
+            txt.text = "";
         if (CurrentPlayer == Eplayer.WHITE)
             CurrentPlayer = Eplayer.BLACK;
         else
             CurrentPlayer = Eplayer.WHITE;
+
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)
@@ -30,9 +35,9 @@ public class BaseGameCTL : MonoBehaviour
     }
     public void AI_turn()
     {
-        if (CurrentPlayer == AI.player)
+        if (CurrentPlayer == AI.Player)
         {
-            computer.find_move(ChessBoard.Current);
+            computer.find_move();
         }
     }
     public Egame_state CheckGameState()
@@ -43,6 +48,11 @@ public class BaseGameCTL : MonoBehaviour
     {
         _gameState = Egame_state.END_GAME;
         txt.text = "WinPlayer : " + winPlayer;
+    }
+    public void checkmate()
+    {
+        _gameState = Egame_state.END_GAME;
+        txt.text = "CHECKMATE!";
     }
 
     private void Awake()

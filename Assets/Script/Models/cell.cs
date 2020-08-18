@@ -9,7 +9,6 @@ public class cell : MonoBehaviour
     private BasePiece _currentPiece;
     private Transform  Cell_Hover;
 
-    public float size { get { return GetComponent<Renderer>().bounds.size.x; } }
     public BasePiece CurrentPiece { get { return _currentPiece; } }
     public Ecell_color color
     {

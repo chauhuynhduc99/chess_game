@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
-using Assets.Script.Models;
 
 public abstract class BasePiece : MonoBehaviour
 {
@@ -16,7 +15,7 @@ public abstract class BasePiece : MonoBehaviour
     private bool mouse_down;
     private Eside side;
     protected Etype type;
-    protected bool is_it_moved;
+    protected bool is_it_moved = false;
 
     [SerializeField]
     protected Vector3 offsetPosition;
@@ -31,6 +30,7 @@ public abstract class BasePiece : MonoBehaviour
     #endregion
     public Eside Side { get { return side; } set { side = value; } }
     public int Value { get { return value; } }
+    public bool Is_it_active { get; set; }
     public Eplayer Player { get { return _player; } protected set { _player = value; } }
     public Vector2 Location { get; protected set; }
     public cell CurrentCell { get { return _currentCell; } set { _currentCell = value; } }
@@ -40,6 +40,7 @@ public abstract class BasePiece : MonoBehaviour
     public void SetOriginalLocation(int x, int y)//Khởi tạo vị trí ban đầu
     {
         is_it_moved = false;
+        Is_it_active = true;
         transform.position = new Vector3(x, y, -1);
         this.Location = this.transform.position;
         //Gán ô cờ ở vị trí tương ứng cho _currentCell
@@ -82,7 +83,7 @@ public abstract class BasePiece : MonoBehaviour
         foreach (Clocation item in list)
         {
             cell Cell = ChessBoard.Current.cells[item.X][item.Y];
-            if (Cell.CurrentPiece == null || Cell.CurrentPiece.Player != _player)
+            if (Cell.CurrentPiece == null || (Cell.CurrentPiece != null && Cell.CurrentPiece.Player != _player))
                 _canMovecells.Add(Cell);
         }
         return _canMovecells;
@@ -100,43 +101,7 @@ public abstract class BasePiece : MonoBehaviour
         }
         return _target;
     }
-    public bool Is_legal_Move(cell move)
-    {
-        return getLegalMoves().Contains(move);
-    }
-    public bool has_Escaped_move()
-    {
-        List<cell> moves = getLegalMoves();
-        if (Player == Eplayer.BLACK)
-        {
-            foreach (cell move in moves)
-            {
-                foreach (BasePiece item in ChessBoard.Current.White_Pieces)
-                {
-                    foreach (cell target in item.getTarget())
-                        if (target == move)
-                            moves.Remove(move);
-                }
-            }
-        }
-        else
-        {
-            foreach (cell move in moves)
-            {
-                foreach (BasePiece item in ChessBoard.Current.Black_Pieces)
-                {
-                    foreach (cell target in item.getTarget())
-                        if (target == move)
-                            moves.Remove(move);
-                }
-            }
-        }
-        if (moves == null)
-            return false;
-        else
-            return true;
-    }
-    public void AI_move(cell moveto)
+    public virtual void AI_move(cell moveto)
     {
         mousePos = moveto.transform.position;
         cell old_cell = _currentCell;
@@ -146,11 +111,12 @@ public abstract class BasePiece : MonoBehaviour
             _currentCell.SetPieces(null);
             _currentCell = moveto;
             Location = mousePos;
-            Sound_CTL.Current.PlaySound(Esound.MOVE);
+            //Sound_CTL.Current.PlaySound(Esound.MOVE);
         }
         else
         {
-            ChessBoard.Current.All_Active_Pieces.Remove(moveto.CurrentPiece);
+            ChessBoard.Current.All_piece.Remove(moveto.CurrentPiece);
+            moveto.CurrentPiece.Is_it_active = false;
             if (moveto.CurrentPiece.Player == Eplayer.BLACK)
                 ChessBoard.Current.Black_Pieces.Remove(moveto.CurrentPiece);
             else
@@ -162,11 +128,32 @@ public abstract class BasePiece : MonoBehaviour
             _currentCell.SetPieces(null);
             _currentCell = moveto;
             Location = mousePos;
-            Sound_CTL.Current.PlaySound(Esound.HIT);
+            //Sound_CTL.Current.PlaySound(Esound.HIT);
         }
-        BaseGameCTL.Current.SwitchTurn();
+        if(BaseGameCTL.Current.CheckGameState() == Egame_state.PLAYING)
+            BaseGameCTL.Current.SwitchTurn();
         is_it_moved = true;
         old_cell.SetCellState(Ecell_state.SELECTED);
+    }
+    public void Calculate_move(cell moveto)
+    {
+        this.Location = new Vector2(moveto.transform.position.x, moveto.transform.position.y);
+        _currentCell.SetPieces(null);
+        _currentCell = moveto;
+        moveto.SetPieces(this);
+        if (moveto.CurrentPiece != null && moveto.CurrentPiece.Side != side)
+        {
+            moveto.CurrentPiece.Is_it_active = false;
+        }
+    }
+    public void Return(cell old_cell, cell return_from_cell, BasePiece piece)
+    {
+        this.Location = new Vector2(old_cell.transform.position.x, old_cell.transform.position.y);
+        _currentCell.SetPieces(piece);
+        _currentCell = old_cell;
+        old_cell.SetPieces(this);
+        if (return_from_cell.CurrentPiece != null)
+            return_from_cell.CurrentPiece.Is_it_active = true;
     }
     protected void Start()
     {
@@ -175,13 +162,13 @@ public abstract class BasePiece : MonoBehaviour
     protected void OnMouseDown()
     {
         if (BaseGameCTL.Current.CheckGameState() != Egame_state.PLAYING 
-            || BaseGameCTL.Current.CurrentPlayer != Player)
+            || BaseGameCTL.Current.CurrentPlayer != Player || side == Eside.AI)
         {
             return;
         }
-        _canMovecells = new List<cell>();
-        _target = new List<cell>();
-        list = new List<Clocation>();
+        _canMovecells.Clear();
+        _target.Clear();
+        list.Clear();
         //Lưu vị trí của quân cờ vào Location
         this.Location = _currentCell.transform.position;
         mouse_down = true;
@@ -193,7 +180,7 @@ public abstract class BasePiece : MonoBehaviour
     protected virtual void OnMouseUp()
     {
         if (BaseGameCTL.Current.CheckGameState() != Egame_state.PLAYING
-            || BaseGameCTL.Current.CurrentPlayer != Player)
+            || BaseGameCTL.Current.CurrentPlayer != Player || side == Eside.AI)
         {
             return;
         }
@@ -205,48 +192,53 @@ public abstract class BasePiece : MonoBehaviour
         //Lưu lại biến ô cờ sắp bị thay đổi
         cell old_cell = this._currentCell;
 
-        //Nếu vị trí thả chuột nằm trong list ô có thể đi thì thực hiện thay đổi vị trí cũng như gán cho biến _curentCell ô cờ mới
-        //Đồng thời gán quân cờ này cho biến current_Piece của ô cờ mới và gán null cho ô cờ cũ
-        foreach (cell item in _canMovecells)
+        cell new_cell = ChessBoard.Current.cells[(int)mousePos.x][(int)mousePos.y];
+        if (_canMovecells.Contains(new_cell))
         {
-            if (ChessBoard.Current.cells[(int)mousePos.x][(int)mousePos.y] == item)
+            this._currentCell = new_cell;
+            this._currentCell.SetPieces(this);
+            old_cell.SetPieces(null);
+            if (!ChessBoard.Current.HUMAN_King.isInCheck())
             {
-                this._currentCell = item;
-                this._currentCell.SetPieces(this);
-                old_cell.SetPieces(null);
                 this.Location = mousePos;
                 Sound_CTL.Current.PlaySound(Esound.MOVE);
-                break;
+            }
+            else
+            {
+                this._currentCell = old_cell;
+                old_cell.SetPieces(this);
+                new_cell.SetPieces(null);
             }
         }
-
-        //Vị trí thả chuột nằm trong list ô có quân địch thì destroy quân địch và thực hiện thay đổi vị trí cũng như gán cho biến _curentCell ô cờ mới
-        //Đồng thời gán quân cờ này cho biến current_Piece của ô cờ mới và gán null cho ô cờ cũ
-        foreach (cell item in _target)
+        else if (_target.Contains(new_cell))
         {
-            if (ChessBoard.Current.cells[(int)mousePos.x][(int)mousePos.y] == item)
+            new_cell.CurrentPiece.Is_it_active = false;
+            if (!ChessBoard.Current.HUMAN_King.isInCheck())
             {
-                ChessBoard.Current.All_Active_Pieces.Remove(item.CurrentPiece);
-                if (item.CurrentPiece.Player == Eplayer.BLACK)
-                    ChessBoard.Current.Black_Pieces.Remove(item.CurrentPiece);
+                ChessBoard.Current.All_piece.Remove(new_cell.CurrentPiece);
+                new_cell.CurrentPiece.Is_it_active = false;
+                if (new_cell.CurrentPiece.Player == Eplayer.BLACK)
+                    ChessBoard.Current.Black_Pieces.Remove(new_cell.CurrentPiece);
                 else
-                    ChessBoard.Current.White_Pieces.Remove(item.CurrentPiece);
-                if (item.CurrentPiece.Type == Etype.KING)
+                    ChessBoard.Current.White_Pieces.Remove(new_cell.CurrentPiece);
+                if (new_cell.CurrentPiece.Type == Etype.KING)
                     BaseGameCTL.Current.end_game(this.Player);
-                Destroy(item.CurrentPiece.gameObject);
-                this._currentCell = item;
+                Destroy(new_cell.CurrentPiece.gameObject);
+                this._currentCell = new_cell;
                 this._currentCell.SetPieces(this);
                 old_cell.SetPieces(null);
                 this.Location = mousePos;
                 Sound_CTL.Current.PlaySound(Esound.HIT);
-                break;
+            }
+            else
+            {
+                new_cell.CurrentPiece.Is_it_active = true;
             }
         }
 
-        //Nếu các trường hợp di chuyển và ăn quân không xảy ra thì Location sẽ có giá trị ban đầu
-        //Ta gán giá trị ban đầu cho mousePos để quân cờ trở về vị trí cũ vì đi sai luật
         mousePos = this.Location;
         mousePos.z = -1;
+        transform.position = mousePos;
         EndMove();
         if (_currentCell != old_cell)
         {

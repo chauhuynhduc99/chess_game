@@ -7,65 +7,104 @@ public class ChessBoard : MonoBehaviour
 {
     #region Field
     private cell[][] Cells;
+    public int depth = 0;
     public static ChessBoard Current;
     public GameObject cellPrefap;
     public GameObject Chess_Pieces;
     public Vector3 base_Position = Vector3.zero;
     public LayerMask CellLayerMask = 0;
-    private List<BasePiece> Pieces = new List<BasePiece>();
+    private List<BasePiece> pieces = new List<BasePiece>();
     private List<BasePiece> black_Pieces = new List<BasePiece>();
     private List<BasePiece> white_Pieces = new List<BasePiece>();
     private King black_King;
     private King white_King;
     #endregion
-    public List<BasePiece> All_Active_Pieces { get { return Pieces; } set { Pieces = value; } }
+    public List<BasePiece> All_piece { get { return pieces; } set { pieces = value; } }
     public List<BasePiece> Black_Pieces { get { return black_Pieces; } set { black_Pieces = value; } }
     public List<BasePiece> White_Pieces { get { return white_Pieces; } set { white_Pieces = value; } }
+    public List<BasePiece> AI_Pieces
+    {
+        get
+        {
+            if (black_King.Side == Eside.AI)
+                return Black_Active_Pieces();
+            else
+                return White_Active_Pieces();
+        }
+    }
+    public List<BasePiece> HUMAN_Pieces
+    {
+        get
+        {
+            if (black_King.Side == Eside.HUMAN)
+                return Black_Active_Pieces();
+            else
+                return White_Active_Pieces();
+        }
+    }
     public King Black_King { get { return black_King; } }
     public King White_King { get { return white_King; } }
+    public King HUMAN_King
+    {
+        get
+        {
+            if (black_King.Side == Eside.HUMAN)
+                return black_King;
+            else
+                return white_King;
+        }
+    }
+    public King AI_King
+    {
+        get
+        {
+            if (black_King.Side == Eside.AI)
+                return black_King;
+            else
+                return white_King;
+        }
+    }
     public cell[][] cells { get { return Cells; } set { Cells = value; } }
-
+    public List<BasePiece> All_Active_Pieces()
+    {
+        List<BasePiece> All_pieces_active = new List<BasePiece>();
+        foreach(BasePiece item in pieces)
+        {
+            if (item.Is_it_active)
+                All_pieces_active.Add(item);
+        }
+        return All_pieces_active;
+    }
+    public List<BasePiece> White_Active_Pieces()
+    {
+        List<BasePiece> All_pieces_active = new List<BasePiece>();
+        foreach (BasePiece item in white_Pieces)
+        {
+            if (item.Is_it_active)
+                All_pieces_active.Add(item);
+        }
+        return All_pieces_active;
+    }
+    public List<BasePiece> Black_Active_Pieces()
+    {
+        List<BasePiece> All_pieces_active = new List<BasePiece>();
+        foreach (BasePiece item in black_Pieces)
+        {
+            if (item.Is_it_active)
+                All_pieces_active.Add(item);
+        }
+        return All_pieces_active;
+    }
     public Vector3 Calculate_Position(int i, int j)
     {
         return base_Position + new Vector3(i, j, 0);
     }
-    
-    /*public List<List<cell>> getAll_Legal_Moves(Eplayer player)
-    {
-        List<cell> moveto = new List<cell>();
-        List<List<cell>> moves = new List<List<cell>>();
-        if (player == Eplayer.BLACK)
-        {
-            foreach (BasePiece item in black_Pieces)
-            {
-                foreach (cell move in item.getLegalMoves())
-                {
-                    moveto.Add(move);
-                }
-                moves.Add(moveto);
-            }
-        }
-        else
-        {
-            foreach (BasePiece item in white_Pieces)
-            {
-                foreach (cell move in item.getLegalMoves())
-                {
-                    moveto.Add(move);
-                }
-                moves.Add(moveto);
-            }
-        }
-        return moves;
-    }*/
-
     public void CHOOSE_WHITE()
     {
         Init_ChessBoard();
         Init_ChessPieces(Eplayer.WHITE);
         get_Side(Eplayer.WHITE);
-        AI.player = Eplayer.BLACK;
-
+        AI.Player = Eplayer.BLACK;
     }
     [ContextMenu("CHOOSE_WHITE")]
     public void CHOOSE_BLACK()
@@ -73,7 +112,7 @@ public class ChessBoard : MonoBehaviour
         Init_ChessBoard();
         Init_ChessPieces(Eplayer.BLACK);
         get_Side(Eplayer.BLACK);
-        AI.player = Eplayer.WHITE;
+        AI.Player = Eplayer.WHITE;
     }
     [ContextMenu("CHOOSE_BLACK")]
     private void Init_ChessBoard()
@@ -190,9 +229,9 @@ public class ChessBoard : MonoBehaviour
             BasePiece p = chess_piece.GetComponent<BasePiece>();
             p.SetOriginalLocation(item.X, item.Y);
             chess_piece.transform.parent = Chess_Pieces.transform;
-            Pieces.Add(p);
+            pieces.Add(p);
         }
-        foreach(BasePiece item in Pieces)
+        foreach(BasePiece item in pieces)
         {
             if (item.Player == Eplayer.BLACK)
                 black_Pieces.Add(item);
@@ -206,13 +245,81 @@ public class ChessBoard : MonoBehaviour
     }
     private void get_Side(Eplayer player)
     {
-        foreach (BasePiece item in Pieces)
+        foreach (BasePiece item in pieces)
         {
             if (item.Player == player)
                 item.Side = Eside.HUMAN;
             else
                 item.Side = Eside.AI;
         }
+    }
+    public bool HUMAN_is_checkmated()
+    {
+        bool flag = false;
+        foreach (BasePiece item in HUMAN_Pieces)
+        {
+            bool breaking = false;
+            if (item.getLegalMoves().Count == 0)
+                continue;
+            else
+            {
+                cell old_cell = item.CurrentCell;
+                foreach (cell move in item.getLegalMoves().ToArray())
+                {
+                    BasePiece piece = move.CurrentPiece;
+                    item.Calculate_move(move);
+                    if (ChessBoard.Current.HUMAN_King.isInCheck())
+                    {
+                        item.Return(old_cell, move, piece);
+                        flag = true;
+                    }
+                    else
+                    {
+                        item.Return(old_cell, move, piece);
+                        flag = false;
+                        breaking = true;
+                        break;
+                    }
+                }
+                if (breaking)
+                    break;
+            }
+        }
+        return flag;
+    }
+    public bool AI_is_checkmated()
+    {
+        bool flag = false;
+        foreach (BasePiece item in AI_Pieces)
+        {
+            bool breaking = false;
+            if (item.getLegalMoves().Count == 0)
+                continue;
+            else
+            {
+                cell old_cell = item.CurrentCell;
+                foreach (cell move in item.getLegalMoves().ToArray())
+                {
+                    BasePiece piece = move.CurrentPiece;
+                    item.Calculate_move(move);
+                    if (ChessBoard.Current.AI_King.isInCheck())
+                    {
+                        item.Return(old_cell, move, piece);
+                        flag = true;
+                    }
+                    else
+                    {
+                        item.Return(old_cell, move, piece);
+                        flag = false;
+                        breaking = true;
+                        break;
+                    }
+                }
+                if (breaking)
+                    break;
+            }
+        }
+        return flag;
     }
     private void Awake()
     {

@@ -14,7 +14,7 @@ public class knight : pro_P
             chess_piece.transform.parent = ChessBoard.Current.Chess_Pieces.transform;
             p.CurrentCell.SetPieces(p);
             ChessBoard.Current.White_Pieces.Add(p);
-            ChessBoard.Current.All_Active_Pieces.Add(p);
+            ChessBoard.Current.All_piece.Add(p);
         }
         else
         {
@@ -24,7 +24,7 @@ public class knight : pro_P
             chess_piece.transform.parent = ChessBoard.Current.Chess_Pieces.transform;
             p.CurrentCell.SetPieces(p);
             ChessBoard.Current.Black_Pieces.Add(p);
-            ChessBoard.Current.All_Active_Pieces.Add(p);
+            ChessBoard.Current.All_piece.Add(p);
         }
         Destroy(ProPawn.gameObject);
         pro_P.Current.done = true;

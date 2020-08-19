@@ -1,5 +1,4 @@
-﻿
-public class Clocation
+﻿public class Clocation
 {
     public int X;
     public int Y;

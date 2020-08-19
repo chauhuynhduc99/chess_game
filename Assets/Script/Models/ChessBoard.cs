@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class ChessBoard : MonoBehaviour
 {
     #region Field
     private cell[][] Cells;
-    public int depth = 0;
     public static ChessBoard Current;
     public GameObject cellPrefap;
     public GameObject Chess_Pieces;
@@ -18,7 +15,11 @@ public class ChessBoard : MonoBehaviour
     private List<BasePiece> white_Pieces = new List<BasePiece>();
     private King black_King;
     private King white_King;
+    [SerializeField]
+    public int Depth;
     #endregion
+
+    #region Properties
     public List<BasePiece> All_piece { get { return pieces; } set { pieces = value; } }
     public List<BasePiece> Black_Pieces { get { return black_Pieces; } set { black_Pieces = value; } }
     public List<BasePiece> White_Pieces { get { return white_Pieces; } set { white_Pieces = value; } }
@@ -65,16 +66,42 @@ public class ChessBoard : MonoBehaviour
         }
     }
     public cell[][] cells { get { return Cells; } set { Cells = value; } }
-    public List<BasePiece> All_Active_Pieces()
+    #endregion
+
+    #region UImethod
+    public void CHOOSE_WHITE()
     {
-        List<BasePiece> All_pieces_active = new List<BasePiece>();
-        foreach(BasePiece item in pieces)
-        {
-            if (item.Is_it_active)
-                All_pieces_active.Add(item);
-        }
-        return All_pieces_active;
+        Init_ChessBoard();
+        Init_ChessPieces(Eplayer.WHITE);
+        get_Side(Eplayer.WHITE);
+        AI.Player = Eplayer.BLACK;
     }
+    [ContextMenu("CHOOSE_WHITE")]
+    public void CHOOSE_BLACK()
+    {
+        Init_ChessBoard();
+        Init_ChessPieces(Eplayer.BLACK);
+        get_Side(Eplayer.BLACK);
+        AI.Player = Eplayer.WHITE;
+    }
+    [ContextMenu("CHOOSE_BLACK")]
+    public void CHOOSE_1()
+    {
+        Depth = 1;
+    }
+    [ContextMenu("CHOOSE_1")]
+    public void CHOOSE_2()
+    {
+        Depth = 2;
+    }
+    [ContextMenu("CHOOSE_2")]
+    public void CHOOSE_3()
+    {
+        Depth = 3;
+    }
+    [ContextMenu("CHOOSE_3")]
+    #endregion
+
     public List<BasePiece> White_Active_Pieces()
     {
         List<BasePiece> All_pieces_active = new List<BasePiece>();
@@ -99,22 +126,6 @@ public class ChessBoard : MonoBehaviour
     {
         return base_Position + new Vector3(i, j, 0);
     }
-    public void CHOOSE_WHITE()
-    {
-        Init_ChessBoard();
-        Init_ChessPieces(Eplayer.WHITE);
-        get_Side(Eplayer.WHITE);
-        AI.Player = Eplayer.BLACK;
-    }
-    [ContextMenu("CHOOSE_WHITE")]
-    public void CHOOSE_BLACK()
-    {
-        Init_ChessBoard();
-        Init_ChessPieces(Eplayer.BLACK);
-        get_Side(Eplayer.BLACK);
-        AI.Player = Eplayer.WHITE;
-    }
-    [ContextMenu("CHOOSE_BLACK")]
     private void Init_ChessBoard()
     {
         Cells = new cell[8][];
@@ -255,7 +266,7 @@ public class ChessBoard : MonoBehaviour
     }
     public bool HUMAN_is_checkmated()
     {
-        bool flag = false;
+        bool flag = true;
         foreach (BasePiece item in HUMAN_Pieces)
         {
             bool breaking = false;
@@ -289,7 +300,7 @@ public class ChessBoard : MonoBehaviour
     }
     public bool AI_is_checkmated()
     {
-        bool flag = false;
+        bool flag = true;
         foreach (BasePiece item in AI_Pieces)
         {
             bool breaking = false;

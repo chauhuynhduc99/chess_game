@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System;
 using System.Collections.Generic;
 
 public abstract class BasePiece : MonoBehaviour
@@ -28,6 +27,8 @@ public abstract class BasePiece : MonoBehaviour
     private float minY = 0;
     private float maxY = 7;
     #endregion
+
+    #region Properties
     public Eside Side { get { return side; } set { side = value; } }
     public int Value { get { return value; } }
     public bool Is_it_active { get; set; }
@@ -36,6 +37,7 @@ public abstract class BasePiece : MonoBehaviour
     public cell CurrentCell { get { return _currentCell; } set { _currentCell = value; } }
     public Etype Type { get { return type; } }
     public bool Is_it_moved { get { return is_it_moved; } }
+    #endregion
 
     public void SetOriginalLocation(int x, int y)//Khởi tạo vị trí ban đầu
     {
@@ -79,6 +81,7 @@ public abstract class BasePiece : MonoBehaviour
     {
         list.Clear();
         _canMovecells.Clear();
+        _target.Clear();
         Moving_rule();
         foreach (Clocation item in list)
         {
@@ -155,9 +158,10 @@ public abstract class BasePiece : MonoBehaviour
         if (return_from_cell.CurrentPiece != null)
             return_from_cell.CurrentPiece.Is_it_active = true;
     }
+
     protected void Start()
     {
-        mousePos = transform.position;//Khởi tạo mouse_pos với vị trí ban đàu của quân cờ
+        mousePos = transform.position;
     }
     protected void OnMouseDown()
     {

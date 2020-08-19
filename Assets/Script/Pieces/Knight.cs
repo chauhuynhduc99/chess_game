@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Knight : BasePiece
+﻿public class Knight : BasePiece
 {
     public override void Moving_rule()
     {
@@ -42,7 +38,7 @@ public class Knight : BasePiece
             list.Add(c);
         #endregion
     }
-    private void Awake()
+    protected void Awake()
     {
         value = 350;
         type = Etype.KNIGHT;

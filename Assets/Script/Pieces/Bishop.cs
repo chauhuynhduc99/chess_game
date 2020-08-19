@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Bishop : BasePiece
+﻿public class Bishop : BasePiece
 {
     public override void Moving_rule()
     {
@@ -65,7 +61,7 @@ public class Bishop : BasePiece
         }
         #endregion
     }
-    private void Awake()
+    protected void Awake()
     {
         value = 350;
         type = Etype.BISHOP;

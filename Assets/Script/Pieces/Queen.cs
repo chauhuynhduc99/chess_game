@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Queen : BasePiece
+﻿public class Queen : BasePiece
 {
     public override void Moving_rule()
     {
@@ -121,7 +117,7 @@ public class Queen : BasePiece
         }
         #endregion
     }
-    private void Awake()
+    protected void Awake()
     {
         value = 900;
         type = Etype.QUEEN;

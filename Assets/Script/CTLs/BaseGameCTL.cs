@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditorInternal;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class BaseGameCTL : MonoBehaviour
@@ -10,7 +7,7 @@ public class BaseGameCTL : MonoBehaviour
     private Egame_state _gameState;
     public static BaseGameCTL Current;
     public Text txt;
-    AI computer = new AI();
+    private AI computer = new AI();
 
     public Eplayer CurrentPlayer { get; private set; }
     public Egame_state Game_State { set { _gameState = value; } }
@@ -32,6 +29,10 @@ public class BaseGameCTL : MonoBehaviour
                 ChessBoard.Current.cells[i][j].SetCellState(Ecell_state.NORMAL);
             }
         }
+        if (ChessBoard.Current.HUMAN_is_checkmated())
+            checkmate(Eside.AI);
+        if (ChessBoard.Current.AI_is_checkmated())
+            checkmate(Eside.HUMAN);
     }
     public void AI_turn()
     {
@@ -49,12 +50,11 @@ public class BaseGameCTL : MonoBehaviour
         _gameState = Egame_state.END_GAME;
         txt.text = "WinPlayer : " + winPlayer;
     }
-    public void checkmate()
+    public void checkmate(Eside winSide)
     {
         _gameState = Egame_state.END_GAME;
-        txt.text = "CHECKMATE!";
+        txt.text = "CHECKMATE! " + "WinSide: " + winSide;
     }
-
     private void Awake()
     {
         Current = this;

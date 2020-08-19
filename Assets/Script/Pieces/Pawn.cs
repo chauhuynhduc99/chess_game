@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.SceneManagement;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Pawn : BasePiece
 {
@@ -79,7 +76,7 @@ public class Pawn : BasePiece
             }
         }
     }
-    private void Awake()
+    protected void Awake()
     {
         value = 100;
         type = Etype.PAWN;

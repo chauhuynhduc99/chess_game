@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class King : BasePiece
+﻿public class King : BasePiece
 {
     private bool can_do_castling;
     public override void Moving_rule()
@@ -63,16 +58,16 @@ public class King : BasePiece
     {
         if (Side == Eside.HUMAN)
         {
-            if (ChessBoard.Current.cells[5][0].CurrentPiece == null && ChessBoard.Current.cells[6][0].CurrentPiece == null
-            && ChessBoard.Current.cells[7][0].CurrentPiece.Is_it_moved == false
-            && ChessBoard.Current.cells[7][0].CurrentPiece.Player == this.Player)
-            _canMovecells.Add(ChessBoard.Current.cells[6][0]);
+            if (ChessBoard.Current.cells[7][0].CurrentPiece != null && ChessBoard.Current.cells[5][0].CurrentPiece == null 
+                && ChessBoard.Current.cells[6][0].CurrentPiece == null && ChessBoard.Current.cells[7][0].CurrentPiece.Is_it_moved == false 
+                && ChessBoard.Current.cells[7][0].CurrentPiece.Player == this.Player)
+                _canMovecells.Add(ChessBoard.Current.cells[6][0]);
         }
         else
         {
-            if (ChessBoard.Current.cells[5][7].CurrentPiece == null && ChessBoard.Current.cells[6][7].CurrentPiece == null
-            && ChessBoard.Current.cells[7][7].CurrentPiece.Is_it_moved == false
-            && ChessBoard.Current.cells[7][7].CurrentPiece.Player == this.Player)
+            if (ChessBoard.Current.cells[7][7].CurrentPiece != null && ChessBoard.Current.cells[5][7].CurrentPiece == null 
+                && ChessBoard.Current.cells[6][7].CurrentPiece == null && ChessBoard.Current.cells[7][7].CurrentPiece.Is_it_moved == false 
+                && ChessBoard.Current.cells[7][7].CurrentPiece.Player == this.Player)
                 _canMovecells.Add(ChessBoard.Current.cells[6][7]);
         }
     }
@@ -124,7 +119,6 @@ public class King : BasePiece
         base.AI_move(moveto);
         if (can_do_castling == true)
         {
-            Debug.Log(can_do_castling);
             if (_currentCell == ChessBoard.Current.cells[6][7])
             {
                 Castle p = ChessBoard.Current.cells[7][7].CurrentPiece as Castle;
@@ -139,7 +133,7 @@ public class King : BasePiece
                 can_do_castling = false;
         }
     }
-    private void Awake()
+    protected void Awake()
     {
         value = 1000000;
         type = Etype.KING;

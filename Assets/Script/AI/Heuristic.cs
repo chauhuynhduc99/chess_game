@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Heuristic
 {
-    private const int human = 0;
-    private const int ai = 1;
-    private const int CHECK_BONUS = 50;
-    private const int CHECK_MATE_BONUS = 10000;
+    private const int CHECK_BONUS = 300;
+    private const int CHECK_MATE_BONUS = 900;
     private const int DEPTH_BONUS = 100;
     private int[,,] pieceSquare = new int[,,] {  
             // King end game
@@ -68,56 +65,23 @@ public class Heuristic
             {-20, -10, -10, -10, -10, -10, -10, -20}},
             // Pawn
             {{0,  0,  0,  0,  0,  0,  0,  0},
-            {5, 10, 10, -20, -20, 10, 10,  5},
+            {5, 10, 10, -30, -30, 10, 10,  5},
             {5, -5, -10,  0,  0, -10, -5,  5},
             {0,  0,  0, 20, 20,  0,  0,  0},
             {5,  5, 10, 25, 25, 10,  5,  5},
             {10, 10, 20, 30, 30, 20, 10, 10},
             {50, 50, 50, 50, 50, 50, 50, 50},
             {100,  100,  100,  100,  100,  100,  100,  100}}};
-    private int[,] pawn_rank = new int[2, 10];
-    private int DOUBLED_PAWN_PENALTY = 10;
-    private int ISOLATED_PAWN_PENALTY = 20;
-    private int BACKWARDS_PAWN_PENALTY = 8;
-    private int PASSED_PAWN_BONUS = 20;
-    private int ROW(Vector2 k)
-    {
-        return Convert.ToInt32(k.x);
-    }
-    private int COL(Vector2 k)
-    {
-        return Convert.ToInt32(k.y);
-    }
 
-    public int calculate(ChessBoard board, Eplayer Player, int depth)
+    public int calculate(ChessBoard board, Eside side, int depth)
     {
-        for (int i = 0; i < 10; i++)
-        {
-            pawn_rank[human, i] = 0;
-            pawn_rank[ai, i] = 7;
-        }
-        foreach (BasePiece piece in board.All_Active_Pieces())
-        {
-            if (piece.Type == Etype.PAWN)
-            {
-                int f = COL(piece.Location) + 1;
-                if (piece.Side == human)
-                {
-                    if (pawn_rank[human, f] < ROW(piece.Location))
-                        pawn_rank[human, f] = ROW(piece.Location);
-                }
-                else
-                {
-                    if (pawn_rank[ai, f] > ROW(piece.Location))
-                        pawn_rank[ai, f] = ROW(piece.Location);
-                }
-            }
-        }
-        if (Player == Eplayer.BLACK)
-            return - pieceValueAndPosition(board) - mobility(board)
+        List<BasePiece> AIPieces = board.AI_Pieces;
+        List<BasePiece> HumanPieces = board.HUMAN_Pieces;
+        if (side == Eside.AI)
+            return 0 - pieceValueAndPosition(AIPieces, HumanPieces) - mobility(AIPieces, HumanPieces)
             - check(board) - checkmate(board, depth);
         else
-            return pieceValueAndPosition(board) + mobility(board)
+            return 0 + pieceValueAndPosition(AIPieces, HumanPieces) + mobility(AIPieces, HumanPieces)
             + check(board) + checkmate(board, depth);
     }
 
@@ -143,101 +107,35 @@ public class Heuristic
             return 6;
     }
 
-    int eval_light_pawn_structure(Vector2 sq)
-    {
-        int r = 0;  /* the value to return */
-        int f = COL(sq) + 1;  /* the pawn's file */
-
-        /* if there's a pawn behind this one, it's doubled */
-        if (pawn_rank[human, f] > ROW(sq))
-            r -= DOUBLED_PAWN_PENALTY;
-
-        /* if there aren't any friendly pawns on either side of
-           this one, it's isolated */
-        if ((pawn_rank[human, f - 1] == 0) &&
-                (pawn_rank[human, f + 1] == 0))
-            r -= ISOLATED_PAWN_PENALTY;
-
-        /* if it's not isolated, it might be backwards */
-        else if ((pawn_rank[human, f - 1] < ROW(sq)) &&
-                (pawn_rank[human, f + 1] < ROW(sq)))
-            r -= BACKWARDS_PAWN_PENALTY;
-
-        /* add a bonus if the pawn is passed */
-        if ((pawn_rank[ai, f - 1] >= ROW(sq)) &&
-                (pawn_rank[ai, f] >= ROW(sq)) &&
-                (pawn_rank[ai, f + 1] >= ROW(sq)))
-            r += (7 - ROW(sq)) * PASSED_PAWN_BONUS;
-
-        return r;
-    }
-
-    int eval_dark_pawn_structure(Vector2 sq)
-    {
-        int r = 0;  /* the value to return */
-        int f = COL(sq) + 1;  /* the pawn's file */
-
-        /* if there's a pawn behind this one, it's doubled */
-        if (pawn_rank[ai, f] < ROW(sq))
-            r -= DOUBLED_PAWN_PENALTY;
-
-        /* if there aren't any friendly pawns on either side of
-           this one, it's isolated */
-        if ((pawn_rank[ai, f - 1] == 7) &&
-                (pawn_rank[ai, f + 1] == 7))
-            r -= ISOLATED_PAWN_PENALTY;
-
-        /* if it's not isolated, it might be backwards */
-        else if ((pawn_rank[ai, f - 1] > ROW(sq)) &&
-                (pawn_rank[ai, f + 1] > ROW(sq)))
-            r -= BACKWARDS_PAWN_PENALTY;
-
-        /* add a bonus if the pawn is passed */
-        if ((pawn_rank[human, f - 1] <= ROW(sq)) &&
-                (pawn_rank[human, f] <= ROW(sq)) &&
-                (pawn_rank[human, f + 1] <= ROW(sq)))
-            r += ROW(sq) * PASSED_PAWN_BONUS;
-
-        return r;
-    }
-
-    private int pieceValueAndPosition(ChessBoard board)
+    private int pieceValueAndPosition(List<BasePiece> AIPieces, List<BasePiece> HumanPieces)
     {
         int value = 0;
-        List<BasePiece> blackPieces = board.Black_Active_Pieces();
-        List<BasePiece> whitePieces = board.White_Active_Pieces();
-        int numPieces = blackPieces.Count() + whitePieces.Count();
-        foreach (BasePiece piece in blackPieces)
+        int numPieces = AIPieces.Count() + HumanPieces.Count();
+        foreach (BasePiece piece in AIPieces)
         {
             Vector2 pos = piece.Location;
             value -= piece.Value;
-            value -= pieceSquare[index(piece, numPieces), Convert.ToInt32(pos.x), Convert.ToInt32(pos.y)];
-            if (piece.Type == Etype.PAWN)
-            {
-                value -= eval_dark_pawn_structure(piece.Location);
-            }
+            value -= pieceSquare[index(piece, numPieces), 7 - Convert.ToInt32(pos.y), 7 - Convert.ToInt32(pos.x)];
+            value -= piece.getTarget().Count;
         }
-        foreach (BasePiece piece in whitePieces)
+        foreach (BasePiece piece in HumanPieces)
         {
             Vector2 pos = piece.Location;
             value += piece.Value;
-            value += pieceSquare[index(piece, numPieces), Convert.ToInt32(pos.x), Convert.ToInt32(pos.y)];
-            if (piece.Type == Etype.PAWN)
-            {
-                value += eval_light_pawn_structure(piece.Location);
-            }
+            value += pieceSquare[index(piece, numPieces), Convert.ToInt32(pos.y), Convert.ToInt32(pos.x)];
+            value += piece.getTarget().Count;
         }
         return value;
     }
 
-    private int mobility(ChessBoard board)
+    private int mobility(List<BasePiece> AIPieces, List<BasePiece> HumanPieces)
     {
         int value = 0;
-        foreach(BasePiece item in board.White_Active_Pieces())
+        foreach(BasePiece item in HumanPieces)
         {
             value += item.getLegalMoves().Count();
         }
-        foreach (BasePiece item in board.Black_Active_Pieces())
+        foreach (BasePiece item in AIPieces)
         {
             value -= item.getLegalMoves().Count();
         }
@@ -246,8 +144,8 @@ public class Heuristic
 
     private int check(ChessBoard board)
     {
-        return (board.Black_King.isInCheck() ? CHECK_BONUS : 0)
-            - (board.White_King.isInCheck() ? CHECK_BONUS : 0);
+        return (board.AI_King.isInCheck() ? CHECK_BONUS : 0)
+            - (board.HUMAN_King.isInCheck() ? CHECK_BONUS : 0);
     }
 
     private int depthBonus(int depth)
@@ -257,14 +155,8 @@ public class Heuristic
 
     private int checkmate(ChessBoard board, int depth)
     {
-        bool ai_checkmated = board.AI_is_checkmated();
-        bool human_checkmated = board.HUMAN_is_checkmated();
-        if (AI.Player == Eplayer.BLACK)
-            return (ai_checkmated ? CHECK_MATE_BONUS * depthBonus(depth) : 0)
-                - (human_checkmated ? CHECK_MATE_BONUS * depthBonus(depth) : 0);
-        else
-            return (human_checkmated ? CHECK_MATE_BONUS * depthBonus(depth) : 0)
-                - (ai_checkmated ? CHECK_MATE_BONUS * depthBonus(depth) : 0);
+        return (board.AI_is_checkmated() ? CHECK_MATE_BONUS * depthBonus(depth) : 0)
+                - (board.HUMAN_is_checkmated() ? CHECK_MATE_BONUS * depthBonus(depth) : 0);
     }
 
 }

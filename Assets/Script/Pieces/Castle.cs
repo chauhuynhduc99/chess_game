@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Castle : BasePiece
+﻿public class Castle : BasePiece
 {
     public override void Moving_rule()
         {
@@ -101,7 +97,7 @@ public class Castle : BasePiece
         }
         _currentCell.SetPieces(this);
     }
-    private void Awake()
+    protected void Awake()
     {
         value = 525;
         type = Etype.CASTLE;
